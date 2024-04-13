@@ -83,7 +83,7 @@ public class JavaUsers implements Users {
 	@Override
 	public Result<User> updateUser(String userId, String pwd, User newUser) { // TODO DONE
 		
-		Log.info("getUser : user = " + userId + "; pwd = " + pwd);
+		//Log.info("getUser : user = " + userId + "; pwd = " + pwd);
 		
 		// Check if user is valid
 		if(userId == null || pwd == null) {
@@ -96,20 +96,41 @@ public class JavaUsers implements Users {
 			return Result.error( ErrorCode.BAD_REQUEST);
 		}
 		
+		/*
 		User currUser = users.get(userId);			
 		// Check if user exists 
 		if( currUser == null ) {
 			Log.info("User does not exist.");
 			return Result.error( ErrorCode.NOT_FOUND);
 		}
-		
+		*/
+
+		var resultUsers = Hibernate.getInstance().sql("SELECT * FROM User user WHERE user.userId = '" + userId + "'", User.class);
+
+		if(resultUsers.isEmpty())
+		{
+			Log.info("User does not exist.");
+			return Result.error( ErrorCode.NOT_FOUND);
+		}
+
+		/*
 		//Check if the password is correct
 		if( !currUser.pwd().equals(pwd) ) {
 			Log.info("Password is incorrect.");
 			return Result.error( ErrorCode.FORBIDDEN);
 		}
-		
-		users.replace(userId, newUser);
+		*/
+
+		var passList = Hibernate.getInstance().sql("SELECT user.pwd FROM User user WHERE user.userId = '" + userId + "'", String.class);
+		if (!passList.get(0).equals(pwd)) {
+			Log.info("Password is incorrect.");
+			return Result.error( ErrorCode.FORBIDDEN);
+		}
+
+
+		//users.replace(userId, newUser);
+		Hibernate.getInstance().update(newUser);
+
 		
 		//return Result.error( ErrorCode.NOT_IMPLEMENTED);
 		return Result.ok(newUser);
