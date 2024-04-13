@@ -5,12 +5,12 @@ import static tukano.api.java.Result.*;
 import tukano.api.java.Result;
 import tukano.api.java.Result.ErrorCode;
 
-import java.io.IOException;
-import java.net.InetAddress;
+//import java.io.IOException; //TODO
+//import java.net.InetAddress;
 import java.net.URI;
-import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.List;
+//import java.net.UnknownHostException;
+//import java.util.ArrayList;
+//import java.util.List;
 import java.util.function.Supplier;
 import java.util.logging.Logger;
 
@@ -71,7 +71,8 @@ public class RestClient {
     			if( status == Status.NO_CONTENT) return ok();
     		
     		return error(getErrorCodeFrom(status.getStatusCode()));
-    	} finally {
+    	} 
+    	finally {
     		r.close();
     	}
     }
