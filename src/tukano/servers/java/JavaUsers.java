@@ -11,6 +11,7 @@ import tukano.api.java.Result.ErrorCode;
 import tukano.api.User;
 import tukano.api.java.Users;
 
+//ADD PERSISTENCE AND CHECK IF ITS RIGHT
 public class JavaUsers implements Users {
 	private final Map<String,User> users = new HashMap<>();
 
