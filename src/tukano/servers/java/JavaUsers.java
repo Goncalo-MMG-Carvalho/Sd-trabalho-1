@@ -10,28 +10,40 @@ import tukano.api.java.Result;
 import tukano.api.java.Result.ErrorCode;
 import tukano.api.User;
 import tukano.api.java.Users;
+import tukano.persistence.Hibernate;
 
 //ADD PERSISTENCE AND CHECK IF ITS RIGHT
 public class JavaUsers implements Users {
-	private final Map<String,User> users = new HashMap<>();
+	//private final Map<String,User> users = new HashMap<>();
 
 	private static Logger Log = Logger.getLogger(JavaUsers.class.getName());
 
 	@Override
 	public Result<String> createUser(User user) {
-		Log.info("createUser : " + user);
 		
+		Log.info("createUser : " + user);
 		// Check if user data is valid
 		if(user.userId() == null || user.pwd() == null || user.displayName() == null || user.email() == null) {
 			Log.info("User object invalid.");
 			return Result.error( ErrorCode.BAD_REQUEST);
 		}
-		
-		// Insert user, checking if name already exists
-		if( users.putIfAbsent(user.userId(), user) != null ) {
+
+		var resultUsers = Hibernate.getInstance().sql("SELECT * FROM User user WHERE user.userId = '" + user.userId() + "'", User.class);
+
+		if(!resultUsers.isEmpty())
+		{
 			Log.info("User already exists.");
 			return Result.error( ErrorCode.CONFLICT);
 		}
+		// Insert user, checking if name already exists
+		/*if( users.putIfAbsent(user.userId(), user) != null ) {
+			Log.info("User already exists.");
+			return Result.error( ErrorCode.CONFLICT);
+		}*/
+
+		//db.sql("SELECT FROM ");
+		Hibernate.getInstance().persist(user);
+
 		return Result.ok( user.userId() );
 	}
 
