@@ -1,29 +1,24 @@
 package tukano.clients;
 
 import java.net.URI;
-import java.util.function.Function;
 
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
-
-import tukano.api.java.Result;
 import tukano.api.java.Users;
+import tukano.clients.rest.RestUsersClient;
 import tukano.discovery.Discovery;
 
 
 public class UserClientFactory {
 
 	private static final String REST = "/rest";
-	private static final String GRPC = "/grpc";
+	//private static final String GRPC = "/grpc"; //TODO
 
 	public static Users get(String serverURI) {
 
 		if (serverURI.endsWith(REST))
-			return new RestUsersClient(serverURI);
+			return new RestUsersClient(URI.create(serverURI));
 		
-		if (serverURI.endsWith(GRPC))
-			return new SoapUsersClient(serverURI);
+//		if (serverURI.endsWith(GRPC)) 				//TODO
+//			return new GrpcUsersClient(serverURI);
 		
 		throw new RuntimeException("Unknown service type..." + serverURI);
 	}

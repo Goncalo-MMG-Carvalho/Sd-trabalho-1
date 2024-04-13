@@ -1,4 +1,6 @@
 //package lab3.persistence;
+package tukano.persistence;
+
 
 import java.io.File;
 import java.util.List;

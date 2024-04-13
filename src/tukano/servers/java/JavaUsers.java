@@ -1,4 +1,4 @@
-package lab2.servers.java;
+package tukano.servers.java;
 
 import java.util.ArrayList;
 import java.util.HashMap;

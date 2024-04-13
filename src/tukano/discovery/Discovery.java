@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 package tukano.discovery;
-=======
-//package lab1;
->>>>>>> 427f1f2bafb5a4be0c73f1ac33343a09e64c21c9
 
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -154,11 +150,7 @@ class DiscoveryImpl implements Discovery {
 							var serviceName = parts[0];
 							var uri = URI.create(parts[1]);
 
-<<<<<<< HEAD
 							// TO DO: complete by storing the decoded announcements...
-=======
-							// TODO: complete by storing the decoded announcements...
->>>>>>> 427f1f2bafb5a4be0c73f1ac33343a09e64c21c9
 
 							// 1 - get the services array that offer that service
 							Set<URI> services = servicesAvailable.get(serviceName);

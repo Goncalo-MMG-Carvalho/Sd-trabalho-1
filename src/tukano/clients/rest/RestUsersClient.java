@@ -17,12 +17,11 @@ public class RestUsersClient extends RestClient implements Users {
 		
 	final WebTarget target;
 	
-    protected RestUsersClient(URI serverURI) {
+    public RestUsersClient(URI serverURI) {
     	super(serverURI);
 		target = client.target(serverURI).path(RestUsers.PATH);
 	}
-    
-    
+
 
 	private Result<String> clt_createUser(User user) {
     	return super.toJavaResult( 
