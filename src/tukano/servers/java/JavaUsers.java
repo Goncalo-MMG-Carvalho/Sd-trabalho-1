@@ -73,6 +73,12 @@ public class JavaUsers implements Users {
 		
 		var userList = Hibernate.getInstance().sql("SELECT * FROM User u WHERE u.userId = " + userId, User.class);
 		User user = userList.get(0);
+		
+		
+		if(!user.pwd().equals(pwd)) {
+			Log.info("Password is incorrect.");
+			return Result.error( ErrorCode.FORBIDDEN);
+		}
 
 		return Result.ok(user);
 	}

@@ -6,12 +6,12 @@ import java.util.logging.Logger;
 
 import tukano.api.User;
 import tukano.persistence.Hibernate;
+import tukano.api.Follow;
 import tukano.api.Short;
 import tukano.api.java.Result;
 import tukano.api.java.Shorts;
 import tukano.api.java.Users;
 import tukano.clients.UserClientFactory;
-import tukano.clients.rest.RestUsersClient;
 import tukano.api.java.Result.ErrorCode;
 
 public class JavaShorts implements Shorts {
@@ -54,7 +54,7 @@ public class JavaShorts implements Shorts {
 		String id = generateShortId(userId); 
 		//String blobId = "blob" + id; //usar discovery
 		
-		Short sh = new Short(id, userId, "blobs/" + 1 , System.currentTimeMillis(), 0); //TODO blob id we dont know what to do yet
+		Short sh = new Short(id, userId, "blobs/" + 1); //changed to 1 for running but before was blobID
 		
 		Hibernate.getInstance().persist(sh);
 		
@@ -132,12 +132,21 @@ public class JavaShorts implements Shorts {
 		}
 		
 		
-		var userList  = Hibernate.getInstance().sql("SELECT * FROM User u WHERE u.userId = " + userId, User.class);
-		User user = userList.get(0);
+//		var userList  = Hibernate.getInstance().sql("SELECT * FROM User u WHERE u.userId = " + userId, User.class);
+//		User user = userList.get(0);
+//		
+//		if(user == null) {
+//			Log.info("User does not exist.");
+//			return Result.error( ErrorCode.NOT_FOUND);
+//		}
 		
-		if(user == null) {
-			Log.info("User does not exist.");
-			return Result.error( ErrorCode.NOT_FOUND);
+		Users uclient = UserClientFactory.getUsersClient();
+		Result<User> res = uclient.getUser(userId, "randomPass"); // TODO reavaluate
+		
+		if(!res.isOK()) {
+			ErrorCode error = res.error();
+			if(error != ErrorCode.FORBIDDEN)
+				return Result.error(error);
 		}
 		
 		var shortList = Hibernate.getInstance().sql("SELECT shortId FROM Short s WHERE s.ownerId = " + userId, String.class);
@@ -146,15 +155,50 @@ public class JavaShorts implements Shorts {
 	}
 
 	@Override
-	public Result<Void> follow(String userId1, String userId2, boolean isFollowing, String password) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	public Result<Void> follow(String userId1, String userId2, boolean isFollowing, String pwd) {
+		
+		Users uclient = UserClientFactory.getUsersClient();
+		Result<User> res = uclient.getUser(userId1, pwd);
+		
+		if(!res.isOK()) {
+			return Result.error(res.error());
+		}
+		
+		res = uclient.getUser(userId2, "randomPass");
+		
+		if(!res.isOK()) {
+			ErrorCode error = res.error();
+			if(error != ErrorCode.FORBIDDEN)
+				return Result.error(error);
+		}
+		
+		String newId = generateFollowId(userId1, userId2);
+		Follow f = new Follow(newId, userId1, userId2);
+		
+		if(isFollowing) {
+			Hibernate.getInstance().persist(f);
+		}
+		else {
+			Hibernate.getInstance().delete(f);
+		}
+		
+		return Result.ok();
+	}	
 
 	@Override
-	public Result<List<String>> followers(String userId, String password) {
-		// TODO Auto-generated method stub
-		return null;
+	public Result<List<String>> followers(String userId, String pwd) {
+		
+		Users uclient = UserClientFactory.getUsersClient();
+		Result<User> res = uclient.getUser(userId, pwd);
+		
+		if(!res.isOK()) {
+			return Result.error(res.error());
+		}
+		
+		
+		var followersList = Hibernate.getInstance().sql("SELECT follower FROM Follow f WHERE f.followed = " + userId, String.class);
+		
+		return Result.ok(followersList);
 	}
 
 	@Override
@@ -180,6 +224,10 @@ public class JavaShorts implements Shorts {
 	
 	private String generateShortId(String userId) {
 		return userId + "." + System.currentTimeMillis();
+	}
+	
+	private String generateFollowId(String userId1, String userId2) {
+		return userId1 + "." + userId2;
 	}
 	
 }
