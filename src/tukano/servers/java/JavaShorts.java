@@ -96,16 +96,16 @@ public class JavaShorts implements Shorts {
 		
 		
 		// TODO delete the blob when i delete the short?
-		
-		// TODO delete likes
-		
+			// call BlobsClientFactory to delete the blobs
 		
 		
+		// get likes to this short
+		var likesList = Hibernate.getInstance().sql("SELECT * FROM Like l WHERE l.shortId = '" + shortId + "'" , Like.class);
 		
 		
-		
-		
-		/* delete short */
+		// delete likes
+		Hibernate.getInstance().delete(likesList);
+		// delete short
 		Hibernate.getInstance().delete(sh);
 		
 		return Result.ok();
