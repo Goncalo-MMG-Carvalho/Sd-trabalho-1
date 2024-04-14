@@ -9,7 +9,7 @@ import tukano.discovery.Discovery;
 
 public class UserClientFactory {
 
-	public static final String SERVICE = "UsersService";
+	public static final String SERVICE = "users";
 	
 	private static final String REST = "/rest";
 	//private static final String GRPC = "/grpc"; //TODO
