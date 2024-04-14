@@ -9,6 +9,8 @@ import tukano.discovery.Discovery;
 
 public class UserClientFactory {
 
+	public static final String SERVICE = "UsersService";
+	
 	private static final String REST = "/rest";
 	//private static final String GRPC = "/grpc"; //TODO
 
@@ -23,9 +25,9 @@ public class UserClientFactory {
 		throw new RuntimeException("Unknown service type..." + serverURI);
 	}
 
-	public static Users getUsersClient(String domain) {
+	public static Users getUsersClient() {
 		Discovery discovery = Discovery.getInstance();
-		URI[] domainserviceURI = discovery.knownUrisOf(domain+":users", 1);
+		URI[] domainserviceURI = discovery.knownUrisOf(SERVICE, 1);
 		
 		return UserClientFactory.get(domainserviceURI[0].toString());
 	}

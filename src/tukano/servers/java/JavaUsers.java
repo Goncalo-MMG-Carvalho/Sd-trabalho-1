@@ -201,7 +201,7 @@ public class JavaUsers implements Users {
 			if (userId.toLowerCase().contains(PATTERN)) {
               matchedUsers.add(user);
 			}
-		});*/
+		;*/
 		
         return Result.ok(listUsers);
 		//return Result.error( ErrorCode.NOT_IMPLEMENTED);

@@ -9,6 +9,9 @@ import tukano.persistence.Hibernate;
 import tukano.api.Short;
 import tukano.api.java.Result;
 import tukano.api.java.Shorts;
+import tukano.api.java.Users;
+import tukano.clients.UserClientFactory;
+import tukano.clients.rest.RestUsersClient;
 import tukano.api.java.Result.ErrorCode;
 
 public class JavaShorts implements Shorts {
@@ -18,29 +21,35 @@ public class JavaShorts implements Shorts {
 
 	@Override
 	public Result<Short> createShort(String userId, String pwd) {
-		Log.info("createShort ...");
+//		Log.info("createShort ...");
+//		
+//		if(userId == null || pwd == null ) {
+//			Log.info("Input invalid.");
+//			return Result.error( ErrorCode.BAD_REQUEST);
+//		}
+//		
+//		var userList = Hibernate.getInstance().sql("SELECT * FROM User u WHERE u.userId = " + userId, User.class);
+//		User user = userList.get(0);
+//		
+//		if(user == null) {
+//			Log.info("User does not exist.");
+//			return Result.error( ErrorCode.NOT_FOUND);
+//		}
+//		
+//		if(!user.pwd().equals(pwd)) {
+//			Log.info("Password is incorrect.");
+//			return Result.error( ErrorCode.FORBIDDEN);
+//		}
 		
-		if(userId == null || pwd == null ) {
-			Log.info("Input invalid.");
-			return Result.error( ErrorCode.BAD_REQUEST);
+		
+		Users uclient = UserClientFactory.getUsersClient();
+		Result<User> res = uclient.getUser(userId, pwd);
+		
+		if(!res.isOK()) {
+			return Result.error(res.error());
 		}
-		
-		var userList = Hibernate.getInstance().sql("SELECT * FROM User u WHERE u.userId = " + userId, User.class);
-		User user = userList.get(0);
-		
-		if(user == null) {
-			Log.info("User does not exist.");
-			return Result.error( ErrorCode.NOT_FOUND);
-		}
-		
-		if(!user.pwd().equals(pwd)) {
-			Log.info("Password is incorrect.");
-			return Result.error( ErrorCode.FORBIDDEN);
-		}
-		
 		
 		// String shortId, String ownerId, String blobUrl, long timestamp, int totalLikes
-		
 		//TODO NAO SEI O Q FAZER AQUI COM O BLOB_URL
 		String id = generateShortId(userId); 
 		//String blobId = "blob" + id; //usar discovery
@@ -70,18 +79,23 @@ public class JavaShorts implements Shorts {
 			return Result.error( ErrorCode.NOT_FOUND);
 		}
 		
-		var userList  = Hibernate.getInstance().sql("SELECT * FROM User u WHERE u.userId = " + sh.getOwnerId(), User.class);
-		User user = userList.get(0);
+//		var userList  = Hibernate.getInstance().sql("SELECT * FROM User u WHERE u.userId = " + sh.getOwnerId(), User.class);
+//		User user = userList.get(0);
+//		
+//		if(!user.pwd().equals(pwd)) {
+//			Log.info("Password is incorrect.");
+//			return Result.error( ErrorCode.FORBIDDEN);
+//		}
 		
-		if(!user.pwd().equals(pwd)) {
-			Log.info("Password is incorrect.");
-			return Result.error( ErrorCode.FORBIDDEN);
+		Users uclient = UserClientFactory.getUsersClient();
+		Result<User> res = uclient.getUser(sh.getOwnerId(), pwd);
+		
+		if(!res.isOK()) {
+			return Result.error(res.error());
 		}
 		
 		
-		
 		// do i need to delete the blob when i delete the short?
-		
 		/* TODO delete short */
 		Hibernate.getInstance().delete(sh);
 		
