@@ -71,7 +71,7 @@ public class JavaUsers implements Users {
 			return Result.error( ErrorCode.NOT_FOUND);
 		}
 		
-		var userList = Hibernate.getInstance().sql("SELECT * FROM User u WHERE u.userId = " + userId, User.class);
+		var userList = Hibernate.getInstance().sql("SELECT * FROM User user WHERE user.userId = '" + userId + "'", User.class);
 		User user = userList.get(0);
 		
 		
