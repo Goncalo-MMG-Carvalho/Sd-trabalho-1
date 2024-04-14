@@ -76,6 +76,11 @@ public class Short {
 	public void setTotalLikes(int totalLikes) {
 		this.totalLikes = totalLikes;
 	}
+	
+	// angola - é nosso
+	public void incLikes() {
+		this.totalLikes++;
+	}
 
 	@Override
 	public String toString() {

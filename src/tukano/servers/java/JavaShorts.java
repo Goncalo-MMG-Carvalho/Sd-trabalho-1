@@ -13,7 +13,6 @@ import tukano.api.java.Result;
 import tukano.api.java.Shorts;
 import tukano.api.java.Users;
 import tukano.clients.UserClientFactory;
-import tukano.clients.rest.RestUsersClient;
 import tukano.api.java.Result.ErrorCode;
 
 public class JavaShorts implements Shorts {
@@ -287,9 +286,23 @@ public class JavaShorts implements Shorts {
 	}
 
 	@Override
-	public Result<List<String>> getFeed(String userId, String password) {
-		// TODO Auto-generated method stub
-		return null;
+	public Result<List<String>> getFeed(String userId, String pwd) {
+		
+		Users uclient = UserClientFactory.getUsersClient();
+		Result<User> res = uclient.getUser(userId, pwd);
+		
+		if(!res.isOK()) {
+			return Result.error(res.error());
+		}
+		
+		//get feed
+		var feedList = Hibernate.getInstance()
+				.sql( "SELECT Short.shortId "
+					+ "FROM Short JOIN Follow ON Short.ownerId = Follow.followed "
+					+ "WHERE Follow.follower = '" + userId + "' "
+					+ "ORDER BY Short.timestamp ASC", String.class);
+		
+		return Result.ok(feedList);
 	}
 	
 	
