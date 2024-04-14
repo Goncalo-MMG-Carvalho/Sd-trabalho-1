@@ -93,12 +93,14 @@ public class JavaUsers implements Users {
 			Log.info("Name or Password null.");
 			return Result.error( ErrorCode.BAD_REQUEST);
 		}
-		
+
+		/* FAZ SENTIDO MAS ACHO QUE NAO E O QUE OS PROFS QUEREM NA INTERFACE
 		if(!userId.equals(newUser.userId())) {
 			Log.info("User id can't be changed");
 			return Result.error( ErrorCode.BAD_REQUEST);
 		}
-		
+		*/
+
 		/*
 		User currUser = users.get(userId);			
 		// Check if user exists 
@@ -130,13 +132,24 @@ public class JavaUsers implements Users {
 			return Result.error( ErrorCode.FORBIDDEN);
 		}
 
-
+		User user = resultUsers.get(0);
+		if (newUser.pwd() != null)
+			user.setPwd(newUser.pwd());
+		if (newUser.email() != null)
+			user.setEmail(newUser.email());
+		if (newUser.displayName() != null)
+			user.setDisplayName(newUser.displayName());
+		if (newUser.userId() != null)
+		{
+			Log.info("User id can't be changed");
+			return Result.error( ErrorCode.BAD_REQUEST);
+		}
 		//users.replace(userId, newUser);
-		Hibernate.getInstance().update(newUser);
+		Hibernate.getInstance().update(user);
 
 		
 		//return Result.error( ErrorCode.NOT_IMPLEMENTED);
-		return Result.ok(newUser);
+		return Result.ok(user);
 	}
 
 	@Override
