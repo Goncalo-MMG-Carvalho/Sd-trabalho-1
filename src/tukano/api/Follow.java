@@ -41,5 +41,4 @@ public class Follow {
     public void setId(String id) {
         this.id = id;
     }
-    
 }

@@ -7,15 +7,16 @@ import java.util.logging.Logger;
 import tukano.api.User;
 import tukano.persistence.Hibernate;
 import tukano.api.Follow;
+import tukano.api.Like;
 import tukano.api.Short;
 import tukano.api.java.Result;
 import tukano.api.java.Shorts;
 import tukano.api.java.Users;
 import tukano.clients.UserClientFactory;
+import tukano.clients.rest.RestUsersClient;
 import tukano.api.java.Result.ErrorCode;
 
 public class JavaShorts implements Shorts {
-	
 	
 	private static Logger Log = Logger.getLogger(JavaShorts.class.getName());
 
@@ -71,7 +72,7 @@ public class JavaShorts implements Shorts {
 //			return Result.error( ErrorCode.BAD_REQUEST);
 //		}
 		
-		var shortList = Hibernate.getInstance().sql("SELECT * FROM Short s WHERE s.shortId = " + shortId, Short.class);
+		var shortList = Hibernate.getInstance().sql("SELECT * FROM Short s WHERE s.shortId = '" + shortId + "'", Short.class);
 		Short sh = shortList.get(0);
 		
 		if(sh == null) {
@@ -95,8 +96,17 @@ public class JavaShorts implements Shorts {
 		}
 		
 		
-		// do i need to delete the blob when i delete the short?
-		/* TODO delete short */
+		// TODO delete the blob when i delete the short?
+		
+		// TODO delete likes
+		
+		
+		
+		
+		
+		
+		
+		/* delete short */
 		Hibernate.getInstance().delete(sh);
 		
 		return Result.ok();
@@ -111,7 +121,7 @@ public class JavaShorts implements Shorts {
 			return Result.error( ErrorCode.NOT_FOUND);
 		}
 		
-		var shortList = Hibernate.getInstance().sql("SELECT * FROM Short s WHERE s.shortId = " + shortId, Short.class);
+		var shortList = Hibernate.getInstance().sql("SELECT * FROM Short s WHERE s.shortId = '" + shortId + "'", Short.class);
 		Short sh = shortList.get(0);
 		
 		if(sh == null) {
@@ -149,7 +159,7 @@ public class JavaShorts implements Shorts {
 				return Result.error(error);
 		}
 		
-		var shortList = Hibernate.getInstance().sql("SELECT shortId FROM Short s WHERE s.ownerId = " + userId, String.class);
+		var shortList = Hibernate.getInstance().sql("SELECT shortId FROM Short s WHERE s.ownerId = '" + userId + "'", String.class);
 		
 		return Result.ok(shortList);
 	}
@@ -196,21 +206,84 @@ public class JavaShorts implements Shorts {
 		}
 		
 		
-		var followersList = Hibernate.getInstance().sql("SELECT follower FROM Follow f WHERE f.followed = " + userId, String.class);
+		var followersList = Hibernate.getInstance().sql("SELECT follower FROM Follow f WHERE f.followed = '" + userId + "'", String.class);
 		
 		return Result.ok(followersList);
 	}
 
 	@Override
-	public Result<Void> like(String shortId, String userId, boolean isLiked, String password) {
-		// TODO Auto-generated method stub
-		return null;
+	public Result<Void> like(String shortId, String userId, boolean isLiked, String pwd) {
+		// TODO Verificar error code when user does not exist
+		
+		if(shortId == null || userId == null || pwd == null) {
+			Log.info("info: bad input");
+			return Result.error(ErrorCode.BAD_REQUEST);
+		}
+		
+		
+		Log.info("|Like| user: " + userId + " wants to like short: " + shortId + " value: " + isLiked);
+		
+		Users uclient = UserClientFactory.getUsersClient();
+		Result<User> res = uclient.getUser(userId, pwd);
+		
+		if(!res.isOK()) {
+			return Result.error(res.error());
+		}
+		
+		
+		Result<Short> res2 = this.getShort(shortId);
+		
+		if(!res2.isOK()) {
+			return Result.error(res2.error());
+		}
+		
+		String newId = generateLikeId(userId, shortId);
+		
+		var likelist = Hibernate.getInstance().sql("SELECT * FROM Like l WHERE l.id = '" + newId + "'", Like.class);
+		var isEmpty = likelist.isEmpty();
+		
+		if(!isEmpty && isLiked) {
+			Log.info("Like already exists");
+			return Result.error(ErrorCode.CONFLICT);
+		}
+		
+		if(isEmpty && !isLiked) {
+			Log.info("Already not liked");
+			return Result.error(ErrorCode.NOT_FOUND);
+		}
+		
+		Like l = new Like(newId, userId, shortId);
+		
+		if(isLiked) {
+			Hibernate.getInstance().persist(l);
+		}
+		else {
+			Hibernate.getInstance().delete(l);
+		}
+		
+		return Result.ok();
 	}
 
 	@Override
-	public Result<List<String>> likes(String shortId, String password) {
-		// TODO Auto-generated method stub
-		return null;
+	public Result<List<String>> likes(String shortId, String pwd) {		
+		Result<Short> res = this.getShort(shortId);
+		
+		if(!res.isOK()) {
+			return Result.error(res.error());
+		}
+		
+		Short sh = res.value();
+		
+		Users uclient = UserClientFactory.getUsersClient();
+		Result<User> res2 = uclient.getUser(sh.getOwnerId(), pwd);
+		
+		if(!res2.isOK()) {
+			return Result.error(res2.error());
+		}
+		
+		var likeList = Hibernate.getInstance().sql("SELECT l.user FROM Like l WHERE l.shortId = '" + shortId + "'", String.class);
+		
+		return Result.ok(likeList);
 	}
 
 	@Override
@@ -230,4 +303,7 @@ public class JavaShorts implements Shorts {
 		return userId1 + "." + userId2;
 	}
 	
+	private String generateLikeId(String userId, String shortId) {
+		return userId + "." + shortId;
+	}
 }
