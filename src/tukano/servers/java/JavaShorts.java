@@ -54,7 +54,7 @@ public class JavaShorts implements Shorts {
 		String id = generateShortId(userId); 
 		//String blobId = "blob" + id; //usar discovery
 		
-		Short sh = new Short(id, userId, "blobs/" + blobId , System.currentTimeMillis(), 0);
+		Short sh = new Short(id, userId, "blobs/" + 1 , System.currentTimeMillis(), 0); //TODO blob id we dont know what to do yet
 		
 		Hibernate.getInstance().persist(sh);
 		

@@ -1,9 +1,6 @@
 package tukano.servers.java;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Logger;
 
 import tukano.api.java.Result;
@@ -175,7 +172,7 @@ public class JavaUsers implements Users {
 			return Result.error( ErrorCode.FORBIDDEN);
 		}*/
 		
-		//TODO SUPOSTAMENTE TEREMOS QUE FAZER UM DELETE NOS SHORTS/ CHAMAR O CLIENTE
+		//TODO SUPOSTAMENTE TEREMOS QUE FAZER UM DELETE NOS SHORTS/ CHAMAR O CLIENTE e NOS LIKES
 		Hibernate.getInstance().delete(resultUsers.get(0)); 
 		//users.remove(userId);
 		

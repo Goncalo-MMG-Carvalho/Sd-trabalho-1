@@ -106,10 +106,10 @@ public class RestClient {
 		};
 	}
 
-//	@Override
-//	public String toString() {
-//		return serverURI.toString();
-//	}
+	@Override
+	public String toString() {
+		return serverURI.toString();
+	}
 
 	private void mySleep(int ms) {
 		try {

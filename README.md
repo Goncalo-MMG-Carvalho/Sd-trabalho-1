@@ -7,3 +7,7 @@ This repository includes the API and a set of files that should be used in proje
 * ```Dockerfile``` : Dockerfile for creating the docker image of the project
 * ```hibernate.cfg.xml``` : auxiliary file for using Hibernate
 * ```pom.xml``` : maven file for creating the project
+
+* how ro run the project
+  * ```mvn clean compile assembly:single docker:build```
+  * ```./test-sd-tp1.bat -image sd2324-tp1-api-xxxxx-yyyyy"```

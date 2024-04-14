@@ -59,7 +59,7 @@ class DiscoveryImpl implements Discovery {
 	static final int DISCOVERY_ANNOUNCE_PERIOD = 1000;
 
 	// Replace with appropriate values: allowed IP Multicast range: 224.0.0.1 - 239.255.255.255
-	static final InetSocketAddress DISCOVERY_ADDR = new InetSocketAddress("225.0.0.1", 1001); //-1 is to simbolize that we dont need to specify a port
+	static final InetSocketAddress DISCOVERY_ADDR = new InetSocketAddress("226.226.226.226", 2262); //-1 is to simbolize that we dont need to specify a port
 	//PORTS < 1000 normalmente protegidos por sistema
 
 	// Used to separate the two fields that make up a service announcement.
