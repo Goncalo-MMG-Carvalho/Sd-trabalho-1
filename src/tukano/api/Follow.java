@@ -6,29 +6,40 @@ import jakarta.persistence.Id;
 @Entity
 public class Follow {
     @Id
-    String followerId;
-    String followedId;
+    String id;
+    String follower;
+    String followed;
 
     public Follow() {}
 
-    public Follow(String followerId, String followedId) {
-        this.followerId = followerId;
-        this.followedId = followedId;
+    public Follow(String id, String follower, String followed) {
+        this.id = id;
+    	this.follower = follower;
+        this.followed = followed;
     }
 
-    public String getFollowerId() {
-        return followerId;
+    public String getFollower() {
+        return follower;
     }
 
-    public void setFollowerId(String followerId) {
-        this.followerId = followerId;
+    public void setFollower(String followerId) {
+        this.follower = followerId;
     }
 
-    public String getFollowedId() {
-        return followedId;
+    public String getFollowed() {
+        return followed;
     }
 
-    public void setFollowedId(String followedId) {
-        this.followedId = followedId;
+    public void setFollowed(String followedId) {
+        this.followed = followedId;
     }
+    
+    public String getId() {
+    	return id;
+    }
+    
+    public void setId(String id) {
+        this.id = id;
+    }
+    
 }
