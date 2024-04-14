@@ -27,8 +27,7 @@ public class JavaUsers implements Users {
 
 		var resultUsers = Hibernate.getInstance().sql("SELECT * FROM User user WHERE user.userId = '" + user.userId() + "'", User.class);
 
-		if(!resultUsers.isEmpty())
-		{
+		if(!resultUsers.isEmpty()) {
 			Log.info("User already exists.");
 			return Result.error( ErrorCode.CONFLICT);
 		}
@@ -41,7 +40,7 @@ public class JavaUsers implements Users {
 		//db.sql("SELECT FROM ");
 		Hibernate.getInstance().persist(user);
 
-		return Result.ok( user.userId() );
+		return Result.ok(user.userId());
 	}
 
 	@Override
@@ -65,15 +64,12 @@ public class JavaUsers implements Users {
 		}
 		*/
 
-		if(resultUsers.isEmpty())
-		{
+		if(resultUsers.isEmpty()) {
 			Log.info("User does not exist.");
 			return Result.error( ErrorCode.NOT_FOUND);
 		}
 		
-		var userList = Hibernate.getInstance().sql("SELECT * FROM User user WHERE user.userId = '" + userId + "'", User.class);
-		User user = userList.get(0);
-		
+		User user = resultUsers.get(0);
 		
 		if(!user.pwd().equals(pwd)) {
 			Log.info("Password is incorrect.");
@@ -112,8 +108,7 @@ public class JavaUsers implements Users {
 
 		var resultUsers = Hibernate.getInstance().sql("SELECT * FROM User user WHERE user.userId = '" + userId + "'", User.class);
 
-		if(resultUsers.isEmpty())
-		{
+		if(resultUsers.isEmpty()) {
 			Log.info("User does not exist.");
 			return Result.error( ErrorCode.NOT_FOUND);
 		}
@@ -125,29 +120,31 @@ public class JavaUsers implements Users {
 			return Result.error( ErrorCode.FORBIDDEN);
 		}
 		*/
-
-		var passList = Hibernate.getInstance().sql("SELECT user.pwd FROM User user WHERE user.userId = '" + userId + "'", String.class);
-		if (!passList.get(0).equals(pwd)) {
+		User user = resultUsers.get(0);
+		
+		//var passList = Hibernate.getInstance().sql("SELECT user.pwd FROM User user WHERE user.userId = '" + userId + "'", String.class);
+		if (!user.pwd().equals(pwd)) {
 			Log.info("Password is incorrect.");
 			return Result.error( ErrorCode.FORBIDDEN);
 		}
 
-		User user = resultUsers.get(0);
 		if (newUser.pwd() != null)
 			user.setPwd(newUser.pwd());
+		
 		if (newUser.email() != null)
 			user.setEmail(newUser.email());
+		
 		if (newUser.displayName() != null)
 			user.setDisplayName(newUser.displayName());
-		if (newUser.userId() != null)
-		{
+		
+		if (newUser.userId() != null) {
 			Log.info("User id can't be changed");
 			return Result.error( ErrorCode.BAD_REQUEST);
 		}
+		
 		//users.replace(userId, newUser);
 		Hibernate.getInstance().update(user);
 
-		
 		//return Result.error( ErrorCode.NOT_IMPLEMENTED);
 		return Result.ok(user);
 	}
@@ -172,15 +169,16 @@ public class JavaUsers implements Users {
 
 		var resultUsers = Hibernate.getInstance().sql("SELECT * FROM User user WHERE user.userId = '" + userId + "'", User.class);
 
-		if(resultUsers.isEmpty())
-		{
+		if(resultUsers.isEmpty()) {
 			Log.info("User does not exist.");
 			return Result.error( ErrorCode.NOT_FOUND);
 		}
 		
 		
-		var passList = Hibernate.getInstance().sql("SELECT user.pwd FROM User user WHERE user.userId = '" + userId + "'", String.class);
-		if (!passList.get(0).equals(pwd)) {
+		//var passList = Hibernate.getInstance().sql("SELECT user.pwd FROM User user WHERE user.userId = '" + userId + "'", String.class);
+		User user = resultUsers.get(0);
+		
+		if (!user.getPwd().equals(pwd)) {
 			Log.info("Password is incorrect.");
 			return Result.error( ErrorCode.FORBIDDEN);
 		}
@@ -191,13 +189,13 @@ public class JavaUsers implements Users {
 			return Result.error( ErrorCode.FORBIDDEN);
 		}*/
 		
-		//TODO SUPOSTAMENTE TEREMOS QUE FAZER UM DELETE NOS SHORTS/ CHAMAR O CLIENTE e NOS LIKES
-		Hibernate.getInstance().delete(resultUsers.get(0)); 
+		//TODO SUPOSTAMENTE TEREMOS QUE FAZER UM DELETE NOS SHORTS/ CHAMAR O CLIENTE
+		Hibernate.getInstance().delete(user); 
 		//users.remove(userId);
 		
 		
 		//return Result.error( ErrorCode.NOT_IMPLEMENTED);
-		return Result.ok(resultUsers.get(0));
+		return Result.ok(user);
 	}
 
 	@Override
