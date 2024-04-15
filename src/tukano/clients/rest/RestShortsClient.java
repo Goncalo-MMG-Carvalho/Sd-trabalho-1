@@ -167,4 +167,19 @@ public class RestShortsClient extends RestClient implements Shorts {
     	
         //throw new UnsupportedOperationException("Unimplemented method 'getFeed'");
     }
+
+    
+    
+    /* ------------- Apartir de aqui é como Angola, é nosso --------------------*/
+    public Result<Boolean> priv_verifyBlobURI(String blobId) {
+    	return super.toJavaResult( 
+        		target	.path(RestShorts.VERIFY)
+        				.request().accept(MediaType.APPLICATION_JSON)
+        				.post(Entity.entity(blobId, MediaType.APPLICATION_JSON)) , boolean.class );
+    }
+
+	@Override
+	public Result<Boolean> verifyBlobURI(String blobId) {
+		return super.reTry( () -> priv_verifyBlobURI(blobId));
+	}
 }

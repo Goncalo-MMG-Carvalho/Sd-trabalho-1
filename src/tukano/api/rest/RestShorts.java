@@ -12,6 +12,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import tukano.api.Short;
+import tukano.api.java.Result;
 
 @Path(RestShorts.PATH)
 public interface RestShorts {
@@ -28,6 +29,7 @@ public interface RestShorts {
 	String LIKES = "/likes";
 	String SHORTS = "/shorts";
 	String FOLLOWERS = "/followers";
+	String VERIFY = "/verify";
 	
 	@POST
 	@Path("/{" + USER_ID + "}")
@@ -72,4 +74,10 @@ public interface RestShorts {
 	@Path("/{" + USER_ID + "}" + FEED )
 	@Produces(MediaType.APPLICATION_JSON)
 	List<String> getFeed( @PathParam(USER_ID) String userId, @QueryParam(PWD) String password);
+	
+	@POST
+	@Path(VERIFY)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	boolean verifyBlobURI(String blobId);
 }

@@ -13,6 +13,8 @@ import tukano.api.java.Blobs;
 import tukano.api.java.Result;
 import tukano.persistence.Hibernate;
 import tukano.api.java.Result.ErrorCode;
+import tukano.api.java.Shorts;
+import tukano.clients.ShortClientFactory;
 
 
 public class JavaBlobs implements Blobs {
@@ -24,8 +26,8 @@ public class JavaBlobs implements Blobs {
 		Log.info("Wants to upload blobId: " + blobId);
 		
 		// TODO verify if bloburl is valid
-		/*
-		Shorts sclient = ShortsClientFactory.getShortsClient();
+		
+		Shorts sclient = ShortClientFactory.getShortsClient();
 		Result<Boolean> res = sclient.verifyBlobURI(blobId);
 		
 		boolean isValid = res.value();
@@ -34,7 +36,7 @@ public class JavaBlobs implements Blobs {
 			Log.info("BlobId is invalid.");
 			return Result.error(ErrorCode.FORBIDDEN);
 		}
-		*/
+		
 		
 		var blobList = Hibernate.getInstance().sql("SELECT * FROM Blob b WHERE b.blobId = '" + blobId + "'", Blob.class);
 		
