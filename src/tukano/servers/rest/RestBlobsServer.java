@@ -31,9 +31,9 @@ public class RestBlobsServer {
 			String serverURI = String.format(SERVER_URI_FMT, ip, PORT);
 			JdkHttpServerFactory.createHttpServer(URI.create(serverURI), config);
 
-			Log.info(String.format("%s Server ready @ %s\n", SERVICE+args[0], serverURI));
+			Log.info(String.format("%s Server ready @ %s\n", SERVICE/*+args[0]*/, serverURI));
 
-			Discovery.getInstance().announce(SERVICE+args[0], serverURI);
+			Discovery.getInstance().announce(SERVICE/*+args[0]*/, serverURI);
 		} 
 		catch (Exception e) {
 			Log.severe(e.getMessage());

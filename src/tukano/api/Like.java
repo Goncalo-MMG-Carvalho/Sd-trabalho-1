@@ -11,6 +11,8 @@ public class Like {
     String user;
     String shortId;
     
+    public Like() {}
+    
     public Like( String id, String user, String shortId) {
     	this.id = id;
     	this.user = user;
