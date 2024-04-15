@@ -208,10 +208,22 @@ public class JavaShorts implements Shorts {
 			if(!alreadyFollow) {
 				Hibernate.getInstance().persist(f);
 			}
+			else {
+				// TODO reconsider this
+				Log.info("ESTE ERRO NAO ESTA NA INTERFACE");
+				return Result.error(ErrorCode.CONFLICT);
+				
+			}
 		}
 		else {
 			if(alreadyFollow) {
 				Hibernate.getInstance().delete(f);
+			}
+			else {
+				// TODO reconsider this
+				Log.info("ESTE ERRO NAO ESTA NA INTERFACE");
+				return Result.error(ErrorCode.CONFLICT);
+				
 			}
 		}
 		
