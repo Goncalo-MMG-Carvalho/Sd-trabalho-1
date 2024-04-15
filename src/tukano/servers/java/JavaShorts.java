@@ -365,9 +365,9 @@ public class JavaShorts implements Shorts {
 		//get feed
 		var feedList = Hibernate.getInstance()
 				.sql( "SELECT s.shortId"
-					+ "FROM (SELECT s.shortId, s.timestamp"
+					+ "FROM (SELECT Short.shortId, Short.timestamp"
 							+ "FROM Short INNER JOIN Follow ON Short.ownerId = Follow.followed "
-							+ "WHERE s.follower = '" + userId + "' "
+							+ "WHERE Follow.follower = '" + userId + "'"
 							+ "ORDER BY s.timestamp ASC) s", String.class);
 		
 		Log.info("Success getfeed.");
