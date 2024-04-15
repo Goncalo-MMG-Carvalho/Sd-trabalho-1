@@ -26,5 +26,6 @@
 		<mapping class="tukano.api.Short" />
 		<mapping class="tukano.api.Follow" />
 		<mapping class="tukano.api.Like" />
+		<mapping class="tukano.api.Blob" />
 	</session-factory>
 </hibernate-configuration>
