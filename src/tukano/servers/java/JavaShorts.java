@@ -44,12 +44,12 @@ public class JavaShorts implements Shorts {
 		
 		Users uclient = UserClientFactory.getUsersClient();
 		Result<User> res = uclient.getUser(userId, pwd);
-		Log.info("after creating factory to call get user"); //DEBUG
+		//Log.info("after creating factory to call get user"); //DEBUG
 		if(!res.isOK()) {
 			Log.info("Error user does not exist or password wrong.");
 			return Result.error(res.error());
 		}
-		Log.info("after checking result of get user"); //DEBUG
+		//Log.info("after checking result of get user"); //DEBUG
 		// String shortId, String ownerId, String blobUrl, long timestamp, int totalLikes
 		//TODO NAO SEI O Q FAZER AQUI COM O BLOB_URL
 		String id = generateShortId(userId); 
@@ -58,7 +58,7 @@ public class JavaShorts implements Shorts {
 		Short sh = new Short(id, userId, generateBlobUrl(blobId));
 		
 		Hibernate.getInstance().persist(sh);
-		Log.info("after short presist"); //DEBUG
+		//Log.info("after short presist"); //DEBUG
 		
 		Log.info("Success in creating short: " + id);
 		return Result.ok(sh);

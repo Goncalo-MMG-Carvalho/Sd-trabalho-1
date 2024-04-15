@@ -61,5 +61,9 @@ public class RestShortsResource extends BigBoyRest implements RestShorts {
     public List<String> getFeed(String userId, String password) {
         return super.fromJavaResult(impl.getFeed(userId, password));
     }
-	
+
+    @Override
+    public boolean verifyBlobURI(String blobId) {
+        return super.fromJavaResult(impl.verifyBlobURI(blobId));
+    }
 }
