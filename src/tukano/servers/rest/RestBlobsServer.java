@@ -32,7 +32,7 @@ public class RestBlobsServer {
 			JdkHttpServerFactory.createHttpServer(URI.create(serverURI), config);
 
 			Log.info(String.format("%s Server ready @ %s\n", SERVICE, serverURI));
-
+			
 			Discovery.getInstance().announce(SERVICE, serverURI); //ACHO QUE ISTO NAO ESTA CERTO
 		} 
 		catch (Exception e) {
