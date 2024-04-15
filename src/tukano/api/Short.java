@@ -81,6 +81,10 @@ public class Short {
 	public void incLikes() {
 		this.totalLikes++;
 	}
+	
+	public void decLikes() {
+		this.totalLikes--;
+	}
 
 	@Override
 	public String toString() {

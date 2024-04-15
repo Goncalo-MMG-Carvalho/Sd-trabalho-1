@@ -53,9 +53,9 @@ public class JavaShorts implements Shorts {
 		// String shortId, String ownerId, String blobUrl, long timestamp, int totalLikes
 		//TODO NAO SEI O Q FAZER AQUI COM O BLOB_URL
 		String id = generateShortId(userId); 
-		//String blobId = "blob" + id; //usar discovery
+		String blobId = generateBlobID(id);
 		
-		Short sh = new Short(id, userId, "blobs/" + 1); //changed to 1 for running but before was blobID
+		Short sh = new Short(id, userId, generateBlobUrl(blobId));
 		
 		Hibernate.getInstance().persist(sh);
 		
@@ -254,6 +254,8 @@ public class JavaShorts implements Shorts {
 			return Result.error(res2.error());
 		}
 		
+		Short oldShort = res2.value();
+		
 		String newId = generateLikeId(userId, shortId);
 		
 		var likelist = Hibernate.getInstance().sql("SELECT * FROM Like l WHERE l.id = '" + newId + "'", Like.class);
@@ -270,12 +272,29 @@ public class JavaShorts implements Shorts {
 		}
 		
 		Like l = new Like(newId, userId, shortId);
+		//Short newShort;
 		
 		if(isLiked) {
 			Hibernate.getInstance().persist(l);
+			// String shortId, String ownerId, String blobUrl, long timestamp, int totalLikes
+//			newShort = new Short(oldShort.getShortId(), oldShort.getOwnerId(), oldShort.getBlobUrl(),
+//					oldShort.getTimestamp(), oldShort.getTotalLikes() + 1);
+//			Hibernate.getInstance().update(newShort);
+			
+			
+			oldShort.incLikes();
+			Hibernate.getInstance().update(oldShort);
+			
 		}
 		else {
 			Hibernate.getInstance().delete(l);
+
+//			newShort = new Short(oldShort.getShortId(), oldShort.getOwnerId(), oldShort.getBlobUrl(),
+//			oldShort.getTimestamp(), oldShort.getTotalLikes() - 1);
+//			Hibernate.getInstance().update(newShort);
+			
+			oldShort.decLikes();
+			Hibernate.getInstance().update(oldShort);
 		}
 		
 		Log.info("Success Like/Dislike.");
@@ -331,18 +350,42 @@ public class JavaShorts implements Shorts {
 		return Result.ok(feedList);
 	}
 	
+	/**
+	 * verifies that the blobURI is valid
+	 * @return true if it's a valid Blob URI, false otherwise
+	 */
+	public Result<Boolean> verifyBlobURI(String blobId) {
+		String url = generateBlobUrl(blobId);
+		
+		var blobUriList = Hibernate.getInstance().sql("SELECT s.shortId FROM Shorts s WHERE s.blobUrl = '" + url + "'", String.class);
+		
+		if(blobUriList.isEmpty()) {
+			return Result.ok(false);
+		}
+		
+		return Result.ok(true);
+	}
 	
 	
 	
-	private String generateShortId(String userId) {
+	
+	private static String generateShortId(String userId) {
 		return userId + "." + System.currentTimeMillis();
 	}
 	
-	private String generateFollowId(String userId1, String userId2) {
+	private static String generateFollowId(String userId1, String userId2) {
 		return userId1 + "." + userId2;
 	}
 	
-	private String generateLikeId(String userId, String shortId) {
+	private static String generateLikeId(String userId, String shortId) {
 		return userId + "." + shortId;
+	}
+	
+	public static String generateBlobID(String shortId) {
+		return "blob." + shortId;
+	}
+	
+	public static String generateBlobUrl(String blobId) {
+		return "blobs/"+ blobId;
 	}
 }
