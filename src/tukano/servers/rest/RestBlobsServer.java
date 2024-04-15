@@ -33,7 +33,7 @@ public class RestBlobsServer {
 
 			Log.info(String.format("%s Server ready @ %s\n", SERVICE+args[0], serverURI));
 
-			Discovery.getInstance().announce(SERVICE+args[0], serverURI); //ACHO QUE ISTO NAO ESTA CERTO
+			Discovery.getInstance().announce(SERVICE+args[0], serverURI);
 		} 
 		catch (Exception e) {
 			Log.severe(e.getMessage());

@@ -33,7 +33,7 @@ public class RestUsersServer {
 
 			Log.info(String.format("%s Server ready @ %s\n", SERVICE, serverURI));
 
-			Discovery.getInstance().announce(SERVICE, serverURI); //ACHO QUE ISTO NAO ESTA CERTO
+			Discovery.getInstance().announce(SERVICE, serverURI);
 		} 
 		catch (Exception e) {
 			Log.severe(e.getMessage());
