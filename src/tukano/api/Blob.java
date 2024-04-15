@@ -1,13 +1,13 @@
 package tukano.api;
 
-public class Blobs {
+public class Blob {
     private String blobId;
     private String filePath;
 
-    public Blobs() {
+    public Blob() {
     }
 
-    public Blobs(String blobId, String filePath) {
+    public Blob(String blobId, String filePath) {
         this.blobId = blobId;
         this.filePath = filePath;
     }
