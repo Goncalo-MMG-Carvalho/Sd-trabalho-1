@@ -175,7 +175,7 @@ public class JavaShorts implements Shorts {
 	}
 
 	@Override
-	public Result<Void> follow(String userId1, String userId2, boolean isFollowing, String pwd) {
+	public Result<Void> follow(String userId1, String userId2, boolean wantToFollow, String pwd) {
 		Log.info("Follow/Unfollow");
 		
 		Users uclient = UserClientFactory.getUsersClient();
@@ -186,9 +186,9 @@ public class JavaShorts implements Shorts {
 			return Result.error(res.error());
 		}
 		
-		res = uclient.getUser(userId2, "randomPass");
+		res = uclient.getUser(userId2, "randomPass"); 
 		
-		if(!res.isOK()) {
+		if(!res.isOK()) { //verify if the user exists but ignore wrong password
 			ErrorCode error = res.error();
 			if(error != ErrorCode.FORBIDDEN) {
 				Log.info("User2 does not exist.");
@@ -197,12 +197,23 @@ public class JavaShorts implements Shorts {
 		}
 		
 		String newId = generateFollowId(userId1, userId2);
+		
+		var followList = Hibernate.getInstance().sql("SELECT * FROM Follow f WHERE f.id = '" + newId + "'", Follow.class);
+		boolean alreadyFollow = !followList.isEmpty();
+		
+		
 		Follow f = new Follow(newId, userId1, userId2);
 		
-		if(isFollowing) 
-			Hibernate.getInstance().persist(f);
-		else 
-			Hibernate.getInstance().delete(f);
+		if(wantToFollow) {
+			if(!alreadyFollow) {
+				Hibernate.getInstance().persist(f);
+			}
+		}
+		else {
+			if(alreadyFollow) {
+				Hibernate.getInstance().delete(f);
+			}
+		}
 		
 		Log.info("Success follow/unfollow");
 		return Result.ok();
