@@ -350,10 +350,6 @@ public class JavaShorts implements Shorts {
 		return Result.ok(feedList);
 	}
 	
-	/**
-	 * verifies that the blobURI is valid
-	 * @return true if it's a valid Blob URI, false otherwise
-	 */
 	public Result<Boolean> verifyBlobURI(String blobId) {
 		String url = generateBlobUrl(blobId);
 		

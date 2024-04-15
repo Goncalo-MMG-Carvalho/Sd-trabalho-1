@@ -3,12 +3,12 @@ package tukano.servers.java;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.sql.Blob;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.logging.Logger;
 
-
-//import tukano.api.Blob;
+import tukano.api.Blob;
 import tukano.api.java.Blobs;
 import tukano.api.java.Result;
 import tukano.persistence.Hibernate;
@@ -32,11 +32,11 @@ public class JavaBlobs implements Blobs {
 		
 		if(!isValid) {
 			Log.info("BlobId is invalid.");
-			return Result.error(errorCode.FORBIDDEN);
+			return Result.error(ErrorCode.FORBIDDEN);
 		}
 		*/
 		
-		var blobList = Hibernate.getInstance().sql("SELECT * FROM Blobs b WHERE b.blobId = '" + blobId + "'", Blob.class);
+		var blobList = Hibernate.getInstance().sql("SELECT * FROM Blob b WHERE b.blobId = '" + blobId + "'", Blob.class);
 		
 		String blobUrl = JavaShorts.generateBlobUrl(blobId);
 		
@@ -46,21 +46,40 @@ public class JavaBlobs implements Blobs {
 				Log.info("New bytes are different from bytes.");
 				return Result.error( ErrorCode.CONFLICT);
 			}
-			
+			Log.info("Was already uploaded");
 			return Result.ok();
 		}
 		
 		
-		// TODO create file and write to file
+		// create file and write to file
+		Path outputPath = Paths.get(blobUrl);
+		try {
+		    Files.write(outputPath, bytes); // Write the byte array to the file
+		} 
+		catch (IOException e) {
+			Log.info("Error writing to file.");
+		    e.printStackTrace();
+		}
 		
+		Hibernate.getInstance().persist(new Blob(blobId, blobUrl));
 		
+		Log.info("Successful upload blob: " + blobId);
 		return Result.ok();
 	}
 
 	@Override
 	public Result<byte[]> download(String blobId) {
 		// TODO Auto-generated method stub
-		return null;
+		Log.info("Wants to download blobId: " + blobId);
+		
+		var blobList = Hibernate.getInstance().sql("SELECT * FROM Blob b WHERE b.blobId = '" + blobId + "'", Blob.class);
+		if(blobList.isEmpty()) {
+			Log.info("Blob does not exist.");
+			return Result.error(ErrorCode.NOT_FOUND);
+		}
+		
+		
+		return Result.ok(getBytesFromFile(JavaShorts.generateBlobUrl(blobId)));
 	}
 	
 	
