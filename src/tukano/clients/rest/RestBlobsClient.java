@@ -1,35 +1,51 @@
 package tukano.clients.rest;
 
-import tukano.api.Blob;
 import tukano.api.java.Result;
 import tukano.api.java.Blobs;
 import tukano.api.rest.RestBlobs;
 
 import java.net.URI;
-import java.util.List;
 
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.client.WebTarget;
 import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.GenericType;
 
 public class RestBlobsClient extends RestClient implements Blobs {
 
-    protected RestBlobsClient(URI serverURI) {
+	final WebTarget target;
+	
+    public RestBlobsClient(URI serverURI) {
         super(serverURI);
-        //TODO Auto-generated constructor stub
+        target = client.target(serverURI).path(RestBlobs.PATH);
     }
 
+    
+    private Result<Void> priv_upload(String blobId, byte[] bytes) {
+    	return super.toJavaResult(
+    			target.path(blobId).request()
+    				.post(Entity.entity(bytes, MediaType.APPLICATION_JSON)) , Void.class );
+    }
+    
+    public Result<byte[]> priv_download(String blobId) {
+    	return super.toJavaResult(
+    			target.path(blobId).request()
+    				.get() , byte[].class );
+    }
+    
+    
+    
     @Override
     public Result<Void> upload(String blobId, byte[] bytes) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'upload'");
+    	return super.reTry( () -> priv_upload(blobId, bytes));
+    	
+    	//throw new UnsupportedOperationException("Unimplemented method 'upload'");
     }
 
     @Override
     public Result<byte[]> download(String blobId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'download'");
+    	return super.reTry( () -> priv_download(blobId));
+    	
+    	//throw new UnsupportedOperationException("Unimplemented method 'download'");
     }
 
 }

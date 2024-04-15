@@ -53,7 +53,10 @@ public class RestClient {
     			return func.get();
     		} 
     		catch (ProcessingException x) {
+    			Log.info("Going to sleep for" + RETRY_SLEEP + "ms ...");
     			mySleep(RETRY_SLEEP);
+    			Log.info("Now retrying.");
+    			
     		} 
     		catch (Exception x) {
     			x.printStackTrace();

@@ -96,12 +96,6 @@ public class RestShortsClient extends RestClient implements Shorts {
     				.get() , new GenericType<List<String>>() {} );
     }
     
-    
-    
-    
-    
-    
-    
     //fazer igual ao Rest Users Client
     @Override
     public Result<Short> createShort(String userId, String password) {
