@@ -15,6 +15,12 @@ import jakarta.ws.rs.core.GenericType;
 
 public class RestShortsClient extends RestClient implements Shorts {
 
+    protected RestShortsClient(URI serverURI) {
+        super(serverURI);
+        //TODO Auto-generated constructor stub
+    }
+
+
     //fazer igual ao Rest Users Client
     @Override
     public Result<Short> createShort(String userId, String password) {
