@@ -26,7 +26,6 @@ public class RestUsersResource extends BigBoyRest implements RestUsers {
 	public User getUser(String userId, String pwd) {
 		return super.fromJavaResult(impl.getUser(userId, pwd));
 	}
-	
 
 	@Override
 	public User updateUser(String userId, String pwd, User user) {
