@@ -23,13 +23,13 @@ public class RestUsersClient extends RestClient implements Users {
 	}
 
 
-	private Result<String> clt_createUser(User user) {
+	private Result<String> priv_createUser(User user) {
     	return super.toJavaResult( 
     		target.request().accept(MediaType.APPLICATION_JSON)
     						.post(Entity.entity(user, MediaType.APPLICATION_JSON)), String.class );
     }
 
-    private Result<User> clt_getUser(String userId, String pwd) {
+    private Result<User> priv_getUser(String userId, String pwd) {
     	return super.toJavaResult(
     			target	.path( userId )
     					.queryParam(RestUsers.PWD, pwd).request()
@@ -39,7 +39,7 @@ public class RestUsersClient extends RestClient implements Users {
 
     /* ----------- DADO PELO PROF ACIMA ----------- */
     
-    private Result<User> clt_updateUser(String userId, String pwd, User user) {
+    private Result<User> priv_updateUser(String userId, String pwd, User user) {
 		return super.toJavaResult( target.path(userId)
 										.queryParam(RestUsers.PWD, pwd)
 										.request()
@@ -49,7 +49,7 @@ public class RestUsersClient extends RestClient implements Users {
 		
     }
     
-    private Result<User> clt_deleteUser(String userId, String pwd) {    	
+    private Result<User> priv_deleteUser(String userId, String pwd) {    	
     	return super.toJavaResult(target.path(userId)
     			.queryParam(RestUsers.PWD, pwd)
     			.request()
@@ -57,7 +57,7 @@ public class RestUsersClient extends RestClient implements Users {
     			.delete(), User.class);
     }
     
-    private Result<List<User>> clt_searchUsers(String pattern) {
+    private Result<List<User>> priv_searchUsers(String pattern) {
     	return super.toJavaResult( target.path("")
 					.queryParam(RestUsers.QUERY, pattern)
 					.request()
@@ -71,12 +71,12 @@ public class RestUsersClient extends RestClient implements Users {
     
     @Override
     public Result<String> createUser(User user) {
-    	return super.reTry( () -> clt_createUser(user));
+    	return super.reTry( () -> priv_createUser(user));
     }
 
     @Override
     public Result<User> getUser(String userId, String pwd) {
-    	return super.reTry( () -> clt_getUser(userId, pwd));
+    	return super.reTry( () -> priv_getUser(userId, pwd));
     }
     
     /* ----------- DADO PELO PROF ACIMA ----------- */
@@ -84,16 +84,16 @@ public class RestUsersClient extends RestClient implements Users {
 
 	@Override
 	public Result<User> updateUser(String userId, String pwd, User user) {
-		return super.reTry(() -> clt_updateUser(userId, pwd, user));
+		return super.reTry(() -> priv_updateUser(userId, pwd, user));
 	}
 
 	@Override
 	public Result<User> deleteUser(String userId, String pwd) {
-		return super.reTry(() -> clt_deleteUser(userId, pwd));
+		return super.reTry(() -> priv_deleteUser(userId, pwd));
 	}
 
 	@Override
 	public Result<List<User>> searchUsers(String pattern) {
-		return super.reTry(() -> clt_searchUsers(pattern));
+		return super.reTry(() -> priv_searchUsers(pattern));
 	}
 }

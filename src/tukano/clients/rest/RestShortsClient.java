@@ -15,72 +15,162 @@ import jakarta.ws.rs.core.GenericType;
 
 public class RestShortsClient extends RestClient implements Shorts {
 
-    protected RestShortsClient(URI serverURI) {
+	final WebTarget target;
+	
+    public RestShortsClient(URI serverURI) {
         super(serverURI);
-        //TODO Auto-generated constructor stub
+        target = client.target(serverURI).path(RestShorts.PATH);
     }
 
 
+    private Result<Short> priv_createShort(String userId, String pwd) { // TODO verificar se null funciona
+    	return super.toJavaResult( 
+    		target	.path(userId)
+    				.queryParam(RestShorts.PWD, pwd)
+    				.request().accept(MediaType.APPLICATION_JSON)
+    				.post(null) , Short.class ); //TODO
+    }
+    
+    private Result<Void> priv_deleteShort(String shortId, String pwd) { 
+    	return super.toJavaResult( 
+    		target	.path(shortId)
+    				.queryParam(RestShorts.PWD, pwd)
+    				.request()
+    				.delete() , Void.class );
+    }
+    
+    private Result<Short> priv_getShort(String shortId) {
+    	return super.toJavaResult( 
+    		target	.path(shortId)
+    				.request().accept(MediaType.APPLICATION_JSON)
+    				.get() , Short.class );
+    }
+    
+    private Result<List<String>> priv_getShorts (String userId) {
+    	return super.toJavaResult( 
+    		target	.path(userId + RestShorts.SHORTS)
+    				.request().accept(MediaType.APPLICATION_JSON)
+    				.get() , new GenericType<List<String>>() {} );
+    }
+    
+    private Result<Void> priv_follow (String userId1, String userId2, 
+    								   boolean isFollowing, String pwd) {
+    	
+    	return super.toJavaResult( 
+    		target	.path(userId1 + "/" +  userId2 + RestShorts.FOLLOWERS)
+    				.queryParam(RestShorts.PWD, pwd)
+    				.request()
+    				.post(Entity.entity(isFollowing, MediaType.APPLICATION_JSON)), Void.class );
+    }
+    
+    private Result<List<String>> priv_followers (String userId, String pwd) {
+
+		return super.toJavaResult( 
+			target	.path(userId + RestShorts.FOLLOWERS)
+					.queryParam(RestShorts.PWD, pwd)
+					.request().accept(MediaType.APPLICATION_JSON)
+					.get(), new GenericType<List<String>>() {} );
+	}
+    
+    private Result< Void > priv_like (String shortId, String userId, boolean isLiked, String pwd) {
+    	return super.toJavaResult( 
+    		target	.path(shortId + "/" + userId + RestShorts.LIKES)
+    				.queryParam(RestShorts.PWD, pwd)
+    				.request()
+    				.post(Entity.entity(isLiked, MediaType.APPLICATION_JSON)) , Void.class );
+    }
+    
+    private Result<List<String>> priv_likes (String shortId, String pwd) {
+    	return super.toJavaResult( 
+    		target	.path(shortId + RestShorts.LIKES)
+    				.queryParam(RestShorts.PWD, pwd)
+    				.request().accept(MediaType.APPLICATION_JSON)
+    				.get() , new GenericType<List<String>>() {} );
+    }
+    
+    private Result<List<String>> priv_getFeed (String userId, String pwd) {
+    	return super.toJavaResult( 
+    		target	.path(userId + RestShorts.FEED)
+    				.queryParam(RestShorts.PWD, pwd)
+    				.request().accept(MediaType.APPLICATION_JSON)
+    				.get() , new GenericType<List<String>>() {} );
+    }
+    
+    
+    
+    
+    
+    
+    
     //fazer igual ao Rest Users Client
     @Override
     public Result<Short> createShort(String userId, String password) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'createShort'");
+    	return super.reTry( () -> priv_createShort(userId, password));
+    	
+        //throw new UnsupportedOperationException("Unimplemented method 'createShort'");
     }
 
 
     @Override
     public Result<Void> deleteShort(String shortId, String password) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'deleteShort'");
+    	return super.reTry( () -> priv_deleteShort(shortId, password));
+    	
+        //throw new UnsupportedOperationException("Unimplemented method 'deleteShort'");
     }
 
 
     @Override
     public Result<Short> getShort(String shortId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getShort'");
+    	return super.reTry( () -> priv_getShort(shortId));
+    	
+        //throw new UnsupportedOperationException("Unimplemented method 'getShort'");
     }
 
 
     @Override
     public Result<List<String>> getShorts(String userId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getShorts'");
+    	return super.reTry( () -> priv_getShorts(userId));
+    	
+        //throw new UnsupportedOperationException("Unimplemented method 'getShorts'");
     }
 
 
     @Override
     public Result<Void> follow(String userId1, String userId2, boolean isFollowing, String password) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'follow'");
+    	return super.reTry( () -> priv_follow(userId1, userId2, isFollowing, password));
+    	
+        //throw new UnsupportedOperationException("Unimplemented method 'follow'");
     }
 
 
     @Override
     public Result<List<String>> followers(String userId, String password) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'followers'");
+    	return super.reTry( () -> priv_followers(userId, password));
+    	
+        //throw new UnsupportedOperationException("Unimplemented method 'followers'");
     }
 
 
     @Override
     public Result<Void> like(String shortId, String userId, boolean isLiked, String password) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'like'");
+    	return super.reTry( () -> priv_like(shortId, userId, isLiked, password));
+    	
+        //throw new UnsupportedOperationException("Unimplemented method 'like'");
     }
 
 
     @Override
     public Result<List<String>> likes(String shortId, String password) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'likes'");
+    	return super.reTry( () -> priv_likes(shortId, password));
+    	
+        //throw new UnsupportedOperationException("Unimplemented method 'likes'");
     }
 
 
     @Override
     public Result<List<String>> getFeed(String userId, String password) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getFeed'");
+    	return super.reTry( () -> priv_getFeed(userId, password));
+    	
+        //throw new UnsupportedOperationException("Unimplemented method 'getFeed'");
     }
 }
