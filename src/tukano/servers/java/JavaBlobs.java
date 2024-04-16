@@ -109,15 +109,21 @@ public class JavaBlobs implements Blobs {
 		
 		Log.info("\n\n\n\n\n\n\nEntrou no deleteshortsblobs ... \n\n\n");
 		
-		var blobList = Hibernate.getInstance().sql("SELECT * FROM Blob b WHERE b.blobId LIKE '%" + shortId + "%'", Blob.class);
+		var blobList = Hibernate.getInstance().sql("SELECT * FROM Blob b WHERE b.blobId = 'blob."+ shortId + "'", Blob.class);
 		
 		if(!blobList.isEmpty()) {	
 			for (Blob b : blobList) {
-				Log.info("Deleting blob: " + b.getBlobId());
+				Log.info("Deleting blob: \n\n\n" + b.getBlobId());
+				
+				//Hibernate.getInstance().delete(b);
 			}
 			
 			Hibernate.getInstance().delete(blobList);
 		}
+		
+		blobList = Hibernate.getInstance().sql("SELECT * FROM Blob b WHERE b.blobId = 'blob."+ shortId + "'", Blob.class);
+		Log.info("\n\n DID DELETE BLOB? "+ blobList.isEmpty());
+		
 		
 		return Result.ok();
 	}
