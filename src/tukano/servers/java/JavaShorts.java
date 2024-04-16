@@ -1,6 +1,7 @@
 package tukano.servers.java;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -389,32 +390,45 @@ public class JavaShorts implements Shorts {
 		//Ja percebi o teste 4b do prof é mesmo rato quando não há users a seguir poem os shorts do mesmo
 		
 		// VERSÃO SEBAS
+		
+		var allFollow = Hibernate.getInstance().sql("SELECT * FROM Follow f WHERE f.follower = '" + userId + "'", Follow.class);
+		
+		List<Short> followedShortsList = Hibernate.getInstance().sql(" SELECT * FROM Shorts s WHERE s.ownerId = '" + userId + "'" , Short.class);
+		
+		for (Follow followed : allFollow) {
+			var temp = Hibernate.getInstance().sql(" SELECT * FROM Shorts s WHERE s.ownerId = '" + followed.getId() + "'" , Short.class);
+			if(!temp.isEmpty())
+				followedShortsList.addAll(temp);
+		}
+		
+		// SORT
+		followedShortsList.sort((o1, o2) -> {
+			return (int) (o1.getTimestamp() - o2.getTimestamp());
+		});
+		
+		List<String> resultList = new ArrayList<>();
+		for (Short s : followedShortsList) {
+			resultList.add(s.getShortId());
+		}
+		
+		/*
+		followList.addAll(followList2);
+		followList.forEach(f -> Log.info("short: " + f));*/
+		
+		// VERSÃO GONCAS
 		/*
 		var followList = Hibernate.getInstance()
-				.sql( "SELECT s.shortId"
-					+ "FROM (SELECT * FROM Short INNER JOIN Follow ON Short.ownerId = Follow.followed) s "
-					+ "WHERE s.follower = '" + userId + "' "
-					+ "ORDER BY s.timestamp ASC", String.class);
-		var followList2 = Hibernate.getInstance()
-				.sql("SELECT s.shortId "
-				+ "FROM Short s "
-				+ "WHERE s.ownerId = '" + userId + "'", String.class);
-		
-		followList.addAll(followList2);
-		followList.forEach(f -> Log.info("short: " + f));
-		*/
-		// VERSÃO GONCAS
-		
-		var followList = Hibernate.getInstance()
-				.sql( "SELECT s.shortId"
-					+ "FROM (SELECT Short.shortId, Short.timestamp"
+				.sql( "SELECT s.shortId "
+					+ "FROM (SELECT Short.shortId, Short.timestamp "
 						+ "FROM Short INNER JOIN Follow ON Short.ownerId = Follow.followed "
-						+ "WHERE Follow.follower = '" + userId + "' OR Short.ownerId = '" + userId + "'"
+						+ "WHERE Follow.follower = '" + userId + "' OR Short.ownerId = '" + userId + "' "
 						+ "ORDER BY Short.timestamp ASC) s", String.class);
 		
-
+		*/
+		
+		
 		Log.info("Success getfeed.");
-		return Result.ok(followList);
+		return Result.ok(resultList);
 	}
 	
 	public Result<Boolean> verifyBlobURI(String blobId) {

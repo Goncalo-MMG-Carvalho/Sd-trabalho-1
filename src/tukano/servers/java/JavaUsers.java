@@ -19,13 +19,15 @@ public class JavaUsers implements Users {
 	public Result<String> createUser(User user) {
 		
 		Log.info("createUser : " + user);
+		String userId = user.userId();
+		
 		// Check if user data is valid
-		if(user.userId() == null || user.pwd() == null || user.displayName() == null || user.email() == null) {
+		if(userId == null || user.pwd() == null || user.displayName() == null || user.email() == null) {
 			Log.info("User object invalid.");
 			return Result.error( ErrorCode.BAD_REQUEST);
 		}
-
-		var resultUsers = Hibernate.getInstance().sql("SELECT * FROM User user WHERE user.userId = '" + user.userId() + "'", User.class);
+		
+		var resultUsers = Hibernate.getInstance().sql("SELECT * FROM User user WHERE user.userId = '" + userId + "'", User.class);
 
 		if(!resultUsers.isEmpty()) {
 			Log.info("User already exists.");
@@ -40,7 +42,7 @@ public class JavaUsers implements Users {
 		//db.sql("SELECT FROM ");
 		Hibernate.getInstance().persist(user);
 
-		return Result.ok(user.userId());
+		return Result.ok(userId);
 	}
 
 	@Override
