@@ -1,6 +1,12 @@
 package tukano.api;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+
+@Entity
 public class Blob {
+	
+	@Id
     private String blobId;
     private String filePath;
 

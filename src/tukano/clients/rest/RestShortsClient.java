@@ -171,15 +171,15 @@ public class RestShortsClient extends RestClient implements Shorts {
     
     
     /* ------------- Apartir de aqui é como Angola, é nosso --------------------*/
-    public Result<Boolean> priv_verifyBlobURI(String blobId) {
+    public Result<String> priv_verifyBlobURI(String blobId) {
     	return super.toJavaResult( 
         		target	.path(RestShorts.VERIFY)
         				.request().accept(MediaType.APPLICATION_JSON)
-        				.post(Entity.entity(blobId, MediaType.APPLICATION_JSON)) , boolean.class );
+        				.post(Entity.entity(blobId, MediaType.APPLICATION_JSON)) , String.class );
     }
 
 	@Override
-	public Result<Boolean> verifyBlobURI(String blobId) {
+	public Result<String> verifyBlobURI(String blobId) {
 		return super.reTry( () -> priv_verifyBlobURI(blobId));
 	}
 }

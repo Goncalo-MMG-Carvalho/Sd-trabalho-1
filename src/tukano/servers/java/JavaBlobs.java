@@ -1,6 +1,5 @@
 package tukano.servers.java;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -27,11 +26,11 @@ public class JavaBlobs implements Blobs {
 		
 		// verify if bloburl is valid
 		Shorts sclient = ShortClientFactory.getShortsClient();
-		Result<Boolean> res = sclient.verifyBlobURI(blobId);
+		Result<String> res = sclient.verifyBlobURI(blobId);
 		
-		boolean isValid = res.value();
+		String blobUrl = res.value();
 		
-		if(!isValid) {
+		if(blobUrl == null) {
 			Log.info("BlobId is invalid.");
 			return Result.error(ErrorCode.FORBIDDEN);
 		}
@@ -39,10 +38,8 @@ public class JavaBlobs implements Blobs {
 		
 		var blobList = Hibernate.getInstance().sql("SELECT * FROM Blob b WHERE b.blobId = '" + blobId + "'", Blob.class);
 		
-		String blobUrl = JavaShorts.generateBlobUrl(blobId);
-		
 		if(!blobList.isEmpty()) {
-			byte[] currBytes = getBytesFromFile(blobUrl);
+			byte[] currBytes = getBytesFromFile("/blobFiles/" + blobId);
 			if(!Arrays.equals(currBytes, bytes)) {
 				Log.info("New bytes are different from bytes.");
 				return Result.error( ErrorCode.CONFLICT);
@@ -51,15 +48,15 @@ public class JavaBlobs implements Blobs {
 			return Result.ok();
 		}
 		
-		
 		// create file and write to file
-		Path outputPath = Paths.get(blobUrl);
+		Path outputPath = Paths.get("/blobFiles/" + blobId);
 		try {
+			Files.createFile(outputPath);
 		    Files.write(outputPath, bytes); // Write the byte array to the file
 		} 
 		catch (IOException e) {
-			Log.info("Error writing to file.");
-		    e.printStackTrace();
+			Log.info("\n\n\n Error writing to file. \n\n\n");
+		    //e.printStackTrace();
 		}
 		
 		Hibernate.getInstance().persist(new Blob(blobId, blobUrl));
@@ -79,23 +76,28 @@ public class JavaBlobs implements Blobs {
 			return Result.error(ErrorCode.NOT_FOUND);
 		}
 		
+		/*
+		Shorts sclient = ShortClientFactory.getShortsClient();
+		Result<String> res = sclient.verifyBlobURI(blobId);
+		String blobUrl = res.value();
+		*/
 		
-		return Result.ok(getBytesFromFile(JavaShorts.generateBlobUrl(blobId)));
+		return Result.ok(getBytesFromFile("/blobFiles/" + blobId));
 	}
 	
 	
 	
 	
-	private byte[] getBytesFromFile(String url) {
-		File file = new File(url);
+	private byte[] getBytesFromFile(String filePath) {
 		byte[] fileContent = null;
+		Path path = Paths.get(filePath);
 		
 		try {
-			fileContent = Files.readAllBytes(file.toPath());
+			fileContent = Files.readAllBytes(path);
 		}
 		catch (IOException e) {
-			Log.info("Error reading file.");
-			e.printStackTrace();
+			Log.info("\n\n\n\n Error reading file. \n\n\n\n");
+			//e.printStackTrace();
 		}
 		
 		

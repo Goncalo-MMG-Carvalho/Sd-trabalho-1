@@ -434,16 +434,16 @@ public class JavaShorts implements Shorts {
 		return Result.ok(resultList);
 	}
 	
-	public Result<Boolean> verifyBlobURI(String blobId) {
-		String url = generateBlobUrl(blobId);
+	public Result<String> verifyBlobURI(String blobId) {
+		//String url = generateBlobUrl(blobId);
 		
-		var blobUriList = Hibernate.getInstance().sql("SELECT s.shortId FROM Shorts s WHERE s.blobUrl = '" + url + "'", String.class);
+		var blobUriList = Hibernate.getInstance().sql("SELECT s.blobUrl FROM Short s WHERE s.blobUrl LIKE '%" + blobId + "%'", String.class);
 		
 		if(blobUriList.isEmpty()) {
-			return Result.ok(false);
+			return Result.ok(null);
 		}
 		
-		return Result.ok(true);
+		return Result.ok(blobUriList.get(0));
 	}
 	
 	

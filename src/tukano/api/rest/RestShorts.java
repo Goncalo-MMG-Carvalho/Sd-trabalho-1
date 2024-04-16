@@ -12,7 +12,6 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import tukano.api.Short;
-import tukano.api.java.Result;
 
 @Path(RestShorts.PATH)
 public interface RestShorts {
@@ -79,5 +78,5 @@ public interface RestShorts {
 	@Path(VERIFY)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	boolean verifyBlobURI(String blobId);
+	String verifyBlobURI(String blobId);
 }

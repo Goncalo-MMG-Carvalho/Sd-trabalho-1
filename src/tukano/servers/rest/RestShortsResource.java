@@ -63,7 +63,7 @@ public class RestShortsResource extends BigBoyRest implements RestShorts {
     }
 
     @Override
-    public boolean verifyBlobURI(String blobId) {
+    public String verifyBlobURI(String blobId) {
         return super.fromJavaResult(impl.verifyBlobURI(blobId));
     }
 }

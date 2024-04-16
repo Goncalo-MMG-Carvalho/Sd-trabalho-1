@@ -127,5 +127,5 @@ public interface Shorts {
 
 	
 	
-	Result<Boolean> verifyBlobURI(String blobId);
+	Result<String> verifyBlobURI(String blobId);
 }
