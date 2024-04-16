@@ -8,7 +8,7 @@ import java.util.logging.Logger;
 import tukano.api.User;
 import tukano.persistence.Hibernate;
 import tukano.api.Follow;
-import tukano.api.Like;
+import tukano.api.Likes;
 import tukano.api.Short;
 import tukano.api.java.Result;
 import tukano.api.java.Shorts;
@@ -101,7 +101,7 @@ public class JavaShorts implements Shorts {
 		}
 		
 		// get likes to this short
-		var likesList = Hibernate.getInstance().sql("SELECT * FROM Like l WHERE l.shortId = '" + shortId + "'" , Like.class);
+		var likesList = Hibernate.getInstance().sql("SELECT * FROM Likes l WHERE l.shortId = '" + shortId + "'" , Likes.class);
 		
 		
 		// TODO delete the blob when i delete the short?
@@ -281,7 +281,7 @@ public class JavaShorts implements Shorts {
 		
 		String newId = generateLikeId(userId, shortId);
 		
-		var likelist = Hibernate.getInstance().sql("SELECT * FROM Like l WHERE l.id = '" + newId + "'", Like.class);
+		var likelist = Hibernate.getInstance().sql("SELECT * FROM Likes l WHERE l.id = '" + newId + "'", Likes.class);
 		var isEmpty = likelist.isEmpty();
 		
 		if(!isEmpty && isLiked) {
@@ -294,7 +294,7 @@ public class JavaShorts implements Shorts {
 			return Result.error(ErrorCode.NOT_FOUND);
 		}
 		
-		Like l = new Like(newId, userId, shortId);
+		Likes l = new Likes(newId, userId, shortId);
 		//Short newShort;
 		
 		if(isLiked) {
@@ -345,7 +345,7 @@ public class JavaShorts implements Shorts {
 			return Result.error(res2.error());
 		}
 		
-		var likeList = Hibernate.getInstance().sql("SELECT l.user FROM Like l WHERE l.shortId = '" + shortId + "'", String.class);
+		var likeList = Hibernate.getInstance().sql("SELECT l.user FROM Likes l WHERE l.shortId = '" + shortId + "'", String.class);
 		
 		Log.info("Success Likes.");
 		return Result.ok(likeList);
