@@ -109,7 +109,8 @@ public class JavaShorts implements Shorts {
 		
 		
 		// delete likes
-		Hibernate.getInstance().delete(likesList);
+		if(!likesList.isEmpty())
+			Hibernate.getInstance().delete(likesList);
 		// delete short
 		Hibernate.getInstance().delete(sh);
 		

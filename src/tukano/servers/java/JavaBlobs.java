@@ -25,8 +25,7 @@ public class JavaBlobs implements Blobs {
 	public Result<Void> upload(String blobId, byte[] bytes) { // TODO
 		Log.info("Wants to upload blobId: " + blobId);
 		
-		// TODO verify if bloburl is valid
-		
+		// verify if bloburl is valid
 		Shorts sclient = ShortClientFactory.getShortsClient();
 		Result<Boolean> res = sclient.verifyBlobURI(blobId);
 		
