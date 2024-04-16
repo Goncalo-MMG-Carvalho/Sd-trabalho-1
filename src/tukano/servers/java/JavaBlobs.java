@@ -55,11 +55,13 @@ public class JavaBlobs implements Blobs {
 		    Files.write(outputPath, bytes); // Write the byte array to the file
 		} 
 		catch (IOException e) {
-			Log.info("\n\n\n Error writing to file. \n\n\n");
+			Log.info("\n Error writing to file. \n");
 		    //e.printStackTrace();
 		}
 		
-		Hibernate.getInstance().persist(new Blob(blobId, blobUrl));
+		Blob b = new Blob(blobId, blobUrl);
+		
+		Hibernate.getInstance().persist(b);
 		
 		Log.info("Successful upload blob: " + blobId);
 		return Result.ok();
@@ -85,9 +87,6 @@ public class JavaBlobs implements Blobs {
 		return Result.ok(getBytesFromFile("/blobFiles/" + blobId));
 	}
 	
-	
-	
-	
 	private byte[] getBytesFromFile(String filePath) {
 		byte[] fileContent = null;
 		Path path = Paths.get(filePath);
@@ -96,7 +95,7 @@ public class JavaBlobs implements Blobs {
 			fileContent = Files.readAllBytes(path);
 		}
 		catch (IOException e) {
-			Log.info("\n\n\n\n Error reading file. \n\n\n\n");
+			Log.info("\n Error reading file. \n");
 			//e.printStackTrace();
 		}
 		

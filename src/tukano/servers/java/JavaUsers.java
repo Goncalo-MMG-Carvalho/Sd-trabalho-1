@@ -5,6 +5,8 @@ import java.util.logging.Logger;
 
 import tukano.api.java.Result;
 import tukano.api.java.Result.ErrorCode;
+import tukano.clients.ShortClientFactory;
+import tukano.api.java.Shorts;
 import tukano.api.User;
 import tukano.api.java.Users;
 import tukano.persistence.Hibernate;
@@ -191,7 +193,19 @@ public class JavaUsers implements Users {
 			return Result.error( ErrorCode.FORBIDDEN);
 		}*/
 		
-		//TODO SUPOSTAMENTE TEREMOS QUE FAZER UM DELETE NOS SHORTS/ CHAMAR O CLIENTE
+		//TODO SUPOSTAMENTE TEREMOS QUE FAZER UM DELETE NOS FOLLOWS
+		
+		Shorts sclient = ShortClientFactory.getShortsClient();
+		Result<List<String>> res = sclient.getShorts(userId);
+		
+		if(res.isOK()) { //delete user shorts, if he has any
+			var shortsList = res.value();
+			
+			for (String shortId : shortsList) {
+				sclient.deleteShort(shortId, pwd);
+			}
+		}
+		
 		Hibernate.getInstance().delete(user); 
 		//users.remove(userId);
 		

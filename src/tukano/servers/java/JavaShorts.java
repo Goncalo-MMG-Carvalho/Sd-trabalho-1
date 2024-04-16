@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import tukano.api.User;
+import tukano.api.Blob;
 import tukano.persistence.Hibernate;
 import tukano.api.Follow;
 import tukano.api.Likes;
@@ -108,7 +109,21 @@ public class JavaShorts implements Shorts {
 		
 		// TODO delete the blob when i delete the short?
 					// call BlobsClientFactory to delete the blobs
+
 		
+// TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+		
+		// MANEIRA À JAVARDÂO, TODO MUDAR SE O RESULTADO ESTIVER CERTO
+		var blobList = Hibernate.getInstance().sql("SELECT * FROM Blob b WHERE b.blobId LIKE '%" + shortId + "%'", Blob.class);
+		
+		
+		
+// TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO		
+		
+		
+		// delete blobs
+		if(!blobList.isEmpty())
+			Hibernate.getInstance().delete(blobList);
 		
 		// delete likes
 		if(!likesList.isEmpty())
@@ -161,11 +176,11 @@ public class JavaShorts implements Shorts {
 //		}
 		
 		Users uclient = UserClientFactory.getUsersClient();
-		Result<User> res = uclient.getUser(userId, "randomPass"); // TODO reavaluate
+		Result<User> res = uclient.getUser(userId, "randomPass"); // do this to see if the user exists
 		
 		if(!res.isOK()) {
 			ErrorCode error = res.error();
-			if(error != ErrorCode.FORBIDDEN) {
+			if(error != ErrorCode.FORBIDDEN) { // if forbidden then the user exists, but wrong password. So i confirmed the user exists
 				Log.info("User does not exist");
 				return Result.error(error);
 			}
@@ -222,12 +237,12 @@ public class JavaShorts implements Shorts {
 			if(alreadyFollow) {
 				Hibernate.getInstance().delete(f);
 			}
-			else {
-				// TODO reconsider this
+			/*else {
+				// sem este ja funciona
 				Log.info("ESTE ERRO NAO ESTA NA INTERFACE");
 				return Result.error(ErrorCode.CONFLICT);
 				
-			}
+			}*/
 		}
 		
 		Log.info("Success follow/unfollow");
