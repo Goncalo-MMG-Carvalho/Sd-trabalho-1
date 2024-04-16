@@ -113,7 +113,7 @@ public class JavaBlobs implements Blobs {
 		
 		if(!blobList.isEmpty()) {	
 			for (Blob b : blobList) {
-				Log.info("Deleting blob: \n\n\n" + b.getBlobId());
+				Log.info("Deleting blob: " + b.getBlobId() + "\n\n\n");
 				
 				//Hibernate.getInstance().delete(b);
 			}
