@@ -212,7 +212,6 @@ public class JavaShorts implements Shorts {
 				// TODO reconsider this
 				Log.info("ESTE ERRO NAO ESTA NA INTERFACE");
 				return Result.error(ErrorCode.CONFLICT);
-				
 			}
 		}
 		else {
@@ -362,16 +361,17 @@ public class JavaShorts implements Shorts {
 			return Result.error(res.error());
 		}
 		
-		//get feed
-		var feedList = Hibernate.getInstance()
-				.sql( "SELECT s.shortId"
-					+ "FROM (SELECT Short.shortId, Short.timestamp"
-							+ "FROM Short INNER JOIN Follow ON Short.ownerId = Follow.followed "
-							+ "WHERE Follow.follower = '" + userId + "'"
-							+ "ORDER BY s.timestamp ASC) s", String.class);
-		
+		var followList = Hibernate.getInstance().sql("SELECT follower FROM Follow f WHERE f.follower = '"+ userId + "'", String.class);
+		followList.forEach(f -> Log.info("follower: " + f));
+		var followedList = Hibernate.getInstance().sql("SELECT followed FROM Follow f WHERE f.followed = '"+ userId + "'", String.class);
+		followedList.forEach(f -> Log.info("followed: " + f));
+
+		//this from the method followers
+		var followersList = Hibernate.getInstance().sql("SELECT follower FROM Follow f WHERE f.followed = '" + userId + "'", String.class);
+		followersList.forEach(f -> Log.info("followers: " + f));
+
 		Log.info("Success getfeed.");
-		return Result.ok(feedList);
+		return Result.ok(followList);
 	}
 	
 	public Result<Boolean> verifyBlobURI(String blobId) {
