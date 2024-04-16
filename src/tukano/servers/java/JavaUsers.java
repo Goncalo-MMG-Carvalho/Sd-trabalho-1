@@ -20,19 +20,19 @@ public class JavaUsers implements Users {
 	@Override
 	public Result<String> createUser(User user) {
 		
-		Log.info("createUser : " + user);
+		//Log.info("createUser : " + user);
 		String userId = user.userId();
 		
 		// Check if user data is valid
 		if(userId == null || user.pwd() == null || user.displayName() == null || user.email() == null) {
-			Log.info("User object invalid.");
+			//Log.info("User object invalid.");
 			return Result.error( ErrorCode.BAD_REQUEST);
 		}
 		
 		var resultUsers = Hibernate.getInstance().sql("SELECT * FROM User user WHERE user.userId = '" + userId + "'", User.class);
 
 		if(!resultUsers.isEmpty()) {
-			Log.info("User already exists.");
+			//Log.info("User already exists.");
 			return Result.error( ErrorCode.CONFLICT);
 		}
 		// Insert user, checking if name already exists
@@ -49,7 +49,7 @@ public class JavaUsers implements Users {
 
 	@Override
 	public Result<User> getUser(String userId, String pwd) {
-		Log.info("getUser : user = " + userId + "; pwd = " + pwd);
+		//Log.info("getUser : user = " + userId + "; pwd = " + pwd);
 		
 		// Check if user is valid
 		if(userId == null || pwd == null) {
@@ -113,7 +113,7 @@ public class JavaUsers implements Users {
 		var resultUsers = Hibernate.getInstance().sql("SELECT * FROM User user WHERE user.userId = '" + userId + "'", User.class);
 
 		if(resultUsers.isEmpty()) {
-			Log.info("User does not exist.");
+			//Log.info("User does not exist.");
 			return Result.error( ErrorCode.NOT_FOUND);
 		}
 
@@ -128,7 +128,7 @@ public class JavaUsers implements Users {
 		
 		//var passList = Hibernate.getInstance().sql("SELECT user.pwd FROM User user WHERE user.userId = '" + userId + "'", String.class);
 		if (!user.pwd().equals(pwd)) {
-			Log.info("Password is incorrect.");
+			//Log.info("Password is incorrect.");
 			return Result.error( ErrorCode.FORBIDDEN);
 		}
 
@@ -142,7 +142,7 @@ public class JavaUsers implements Users {
 			user.setDisplayName(newUser.displayName());
 		
 		if (newUser.userId() != null) {
-			Log.info("User id can't be changed");
+			//Log.info("User id can't be changed");
 			return Result.error( ErrorCode.BAD_REQUEST);
 		}
 		
@@ -160,7 +160,7 @@ public class JavaUsers implements Users {
 		
 		// Check if user is valid
 		if(userId == null || pwd == null) {
-			Log.info("Name or Password null.");
+			//Log.info("Name or Password null.");
 			return Result.error( ErrorCode.BAD_REQUEST);
 		}
 		
@@ -174,7 +174,7 @@ public class JavaUsers implements Users {
 		var resultUsers = Hibernate.getInstance().sql("SELECT * FROM User user WHERE user.userId = '" + userId + "'", User.class);
 
 		if(resultUsers.isEmpty()) {
-			Log.info("User does not exist.");
+			//Log.info("User does not exist.");
 			return Result.error( ErrorCode.NOT_FOUND);
 		}
 		
@@ -183,7 +183,7 @@ public class JavaUsers implements Users {
 		User user = resultUsers.get(0);
 		
 		if (!user.getPwd().equals(pwd)) {
-			Log.info("Password is incorrect.");
+			//Log.info("Password is incorrect.");
 			return Result.error( ErrorCode.FORBIDDEN);
 		}
 
@@ -219,7 +219,7 @@ public class JavaUsers implements Users {
 		//Log.info("search users: pattern = " + null);
 		
 		if(pattern == null) {
-			Log.info("pattern is null.");
+			//Log.info("pattern is null.");
 			return Result.error( ErrorCode.BAD_REQUEST);
 		}
 		

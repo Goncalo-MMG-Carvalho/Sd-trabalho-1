@@ -26,7 +26,7 @@ public class JavaShorts implements Shorts {
 
 	@Override
 	public Result<Short> createShort(String userId, String pwd) {
-		Log.info("createShort ... user: " + userId + " password: " + pwd);
+		//Log.info("createShort ... user: " + userId + " password: " + pwd);
 //		
 //		if(userId == null || pwd == null ) {
 //			Log.info("Input invalid.");
@@ -49,9 +49,9 @@ public class JavaShorts implements Shorts {
 		
 		Users uclient = UserClientFactory.getUsersClient();
 		Result<User> res = uclient.getUser(userId, pwd);
-		//Log.info("after creating factory to call get user"); //DEBUG
+//		Log.info("after creating factory to call get user"); //DEBUG
 		if(!res.isOK()) {
-			Log.info("Error user does not exist or password wrong.");
+//			Log.info("Error user does not exist or password wrong.");
 			return Result.error(res.error());
 		}
 		//Log.info("after checking result of get user"); //DEBUG
@@ -65,7 +65,7 @@ public class JavaShorts implements Shorts {
 		Hibernate.getInstance().persist(sh);
 		//Log.info("after short presist"); //DEBUG
 		
-		Log.info("Success in creating short: " + id);
+//		Log.info("Success in creating short: " + id);
 		return Result.ok(sh);
 	}
 
@@ -111,20 +111,6 @@ public class JavaShorts implements Shorts {
 		// TODO delete the blob when i delete the short?
 					// call BlobsClientFactory to delete the blobs
 
-		/*
-// TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
-		
-		// MANEIRA À JAVARDÂO, TODO MUDAR SE O RESULTADO ESTIVER CERTO
-		var blobList = Hibernate.getInstance().sql("SELECT * FROM Blob b WHERE b.blobId LIKE '%" + shortId + "%'", Blob.class);
-		
-		// delete blobs
-		if(!blobList.isEmpty())
-			Hibernate.getInstance().delete(blobList);
-		
-		
-// TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO		
-		*/
-		
 		Blobs bclient = BlobClientFactory.getBlobsClient();
 		bclient.deleteShortBlobs(shortId);
 		
@@ -142,32 +128,32 @@ public class JavaShorts implements Shorts {
 
 	@Override
 	public Result<Short> getShort(String shortId) {
-		Log.info("getShort: " + shortId);
+//		Log.info("getShort: " + shortId);
 		
 		if(shortId == null ) {
-			Log.info("Input invalid.");
+//			Log.info("Input invalid.");
 			return Result.error( ErrorCode.NOT_FOUND);
 		}
 		
 		var shortList = Hibernate.getInstance().sql("SELECT * FROM Short s WHERE s.shortId = '" + shortId + "'", Short.class);
 		
 		if(shortList.isEmpty()) {
-			Log.info("Short does not exist.");
+//			Log.info("Short does not exist.");
 			return Result.error( ErrorCode.NOT_FOUND);
 		}
 		
 		Short sh = shortList.get(0);
 		
-		Log.info("Success getShort: " +  shortId);
+//		Log.info("Success getShort: " +  shortId);
 		return Result.ok(sh);
 	}
 
 	@Override
 	public Result<List<String>> getShorts(String userId) {
-		Log.info("getShorts of user: " + userId);
+//		Log.info("getShorts of user: " + userId);
 		
 		if(userId == null ) {
-			Log.info("Input invalid.");
+//			Log.info("Input invalid.");
 			return Result.error( ErrorCode.NOT_FOUND);
 		}
 		
@@ -185,7 +171,7 @@ public class JavaShorts implements Shorts {
 		if(!res.isOK()) {
 			ErrorCode error = res.error();
 			if(error != ErrorCode.FORBIDDEN) { // if forbidden then the user exists, but wrong password. So i confirmed the user exists
-				Log.info("User does not exist");
+//				Log.info("User does not exist");
 				return Result.error(error);
 			}
 		}
@@ -193,19 +179,19 @@ public class JavaShorts implements Shorts {
 		var shortList = Hibernate.getInstance().sql("SELECT shortId FROM Short s WHERE s.ownerId = '" + userId + "'", String.class);
 		
 		
-		Log.info("Success getShorts, userId: " + userId);
+//		Log.info("Success getShorts, userId: " + userId);
 		return Result.ok(shortList);
 	}
 
 	@Override
 	public Result<Void> follow(String userId1, String userId2, boolean wantToFollow, String pwd) {
-		Log.info("Follow/Unfollow");
+//		Log.info("Follow/Unfollow");
 		
 		Users uclient = UserClientFactory.getUsersClient();
 		Result<User> res = uclient.getUser(userId1, pwd);
 		
 		if(!res.isOK()) {
-			Log.info("User1 does not exist or password is incorrect");
+//			Log.info("User1 does not exist or password is incorrect");
 			return Result.error(res.error());
 		}
 		
@@ -214,7 +200,7 @@ public class JavaShorts implements Shorts {
 		if(!res.isOK()) { //verify if the user exists but ignore wrong password
 			ErrorCode error = res.error();
 			if(error != ErrorCode.FORBIDDEN) {
-				Log.info("User2 does not exist.");
+//				Log.info("User2 does not exist.");
 				return Result.error(error);
 			}
 		}
@@ -233,7 +219,7 @@ public class JavaShorts implements Shorts {
 			}
 			else {
 				// TODO reconsider this
-				Log.info("ESTE ERRO NAO ESTA NA INTERFACE");
+//				Log.info("ESTE ERRO NAO ESTA NA INTERFACE");
 				return Result.error(ErrorCode.CONFLICT); //comentar isto os testes do prof nao coincidem com o resilt
 			}
 		}
@@ -243,31 +229,31 @@ public class JavaShorts implements Shorts {
 			}
 			/*else {
 				// sem este ja funciona
-				Log.info("ESTE ERRO NAO ESTA NA INTERFACE");
+//				Log.info("ESTE ERRO NAO ESTA NA INTERFACE");
 				return Result.error(ErrorCode.CONFLICT);
 				
 			}*/
 		}
 		
-		Log.info("Success follow/unfollow");
+//		Log.info("Success follow/unfollow");
 		return Result.ok();
 	}	
 
 	@Override
 	public Result<List<String>> followers(String userId, String pwd) {
-		Log.info("Start of followers. user: " + userId);
+//		Log.info("Start of followers. user: " + userId);
 		
 		Users uclient = UserClientFactory.getUsersClient();
 		Result<User> res = uclient.getUser(userId, pwd);
 		
 		if(!res.isOK()) {
-			Log.info("Error user does not exist or password wrong.");
+//			Log.info("Error user does not exist or password wrong.");
 			return Result.error(res.error());
 		}
 		
 		var followersList = Hibernate.getInstance().sql("SELECT follower FROM Follow f WHERE f.followed = '" + userId + "'", String.class);
 		
-		Log.info("Success followers. user: " + userId);
+//		Log.info("Success followers. user: " + userId);
 		return Result.ok(followersList);
 	}
 
@@ -276,18 +262,18 @@ public class JavaShorts implements Shorts {
 		// TODO Verificar error code when user does not exist
 		
 		if(shortId == null || userId == null || pwd == null) {
-			Log.info("info: bad input");
+//			Log.info("info: bad input");
 			return Result.error(ErrorCode.BAD_REQUEST);
 		}
 		
 		
-		Log.info("|Like| user: " + userId + " wants to like short: " + shortId + " value: " + isLiked);
+//		Log.info("|Like| user: " + userId + " wants to like short: " + shortId + " value: " + isLiked);
 		
 		Users uclient = UserClientFactory.getUsersClient();
 		Result<User> res = uclient.getUser(userId, pwd);
 		
 		if(!res.isOK()) {
-			Log.info("Error with password or user does not exist.");
+//			Log.info("Error with password or user does not exist.");
 			return Result.error(res.error());
 		}
 		
@@ -295,7 +281,7 @@ public class JavaShorts implements Shorts {
 		Result<Short> res2 = this.getShort(shortId);
 		
 		if(!res2.isOK()) {
-			Log.info("Short not found");
+//			Log.info("Short not found");
 			return Result.error(res2.error());
 		}
 		
@@ -307,12 +293,12 @@ public class JavaShorts implements Shorts {
 		var isEmpty = likelist.isEmpty();
 		
 		if(!isEmpty && isLiked) {
-			Log.info("Like already exists");
+//			Log.info("Like already exists");
 			return Result.error(ErrorCode.CONFLICT);
 		}
 		
 		if(isEmpty && !isLiked) {
-			Log.info("Already not liked");
+//			Log.info("Already not liked");
 			return Result.error(ErrorCode.NOT_FOUND);
 		}
 		
@@ -342,18 +328,18 @@ public class JavaShorts implements Shorts {
 			Hibernate.getInstance().update(oldShort);
 		}
 		
-		Log.info("Success Like/Dislike.");
+//		Log.info("Success Like/Dislike.");
 		return Result.ok();
 	}
 
 	@Override
 	public Result<List<String>> likes(String shortId, String pwd) {		
-		Log.info("Likes ...");
+//		Log.info("Likes ...");
 		
 		Result<Short> res = this.getShort(shortId);
 		
 		if(!res.isOK()) {
-			Log.info("Short does not exist.");
+//			Log.info("Short does not exist.");
 			return Result.error(res.error());
 		}
 		
@@ -363,24 +349,24 @@ public class JavaShorts implements Shorts {
 		Result<User> res2 = uclient.getUser(sh.getOwnerId(), pwd);
 		
 		if(!res2.isOK()) {
-			Log.info("Wrong password");
+//			Log.info("Wrong password");
 			return Result.error(res2.error());
 		}
 		
 		var likeList = Hibernate.getInstance().sql("SELECT l.user FROM Likes l WHERE l.shortId = '" + shortId + "'", String.class);
 		
-		Log.info("Success Likes.");
+//		Log.info("Success Likes.");
 		return Result.ok(likeList);
 	}
 
 	@Override
 	public Result<List<String>> getFeed(String userId, String pwd) {
-		Log.info("Started getFeed.");
+//		Log.info("Started getFeed.");
 		Users uclient = UserClientFactory.getUsersClient();
 		Result<User> res = uclient.getUser(userId, pwd);
 		
 		if(!res.isOK()) {
-			Log.info("User does not exist or wrong password");
+//			Log.info("User does not exist or wrong password");
 			return Result.error(res.error());
 		}
 		
@@ -449,7 +435,7 @@ public class JavaShorts implements Shorts {
 		*/
 		
 		
-		Log.info("Success getfeed.");
+//		Log.info("Success getfeed.");
 		return Result.ok(resultList);
 	}
 	
