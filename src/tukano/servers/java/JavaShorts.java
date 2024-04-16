@@ -393,17 +393,17 @@ public class JavaShorts implements Shorts {
 		
 		var allFollow = Hibernate.getInstance().sql("SELECT * FROM Follow f WHERE f.follower = '" + userId + "'", Follow.class);
 		
-		List<Short> followedShortsList = Hibernate.getInstance().sql(" SELECT * FROM Shorts s WHERE s.ownerId = '" + userId + "'" , Short.class);
+		List<Short> followedShortsList = Hibernate.getInstance().sql(" SELECT * FROM Short s WHERE s.ownerId = '" + userId + "'" , Short.class);
 		
 		for (Follow followed : allFollow) {
-			var temp = Hibernate.getInstance().sql(" SELECT * FROM Shorts s WHERE s.ownerId = '" + followed.getId() + "'" , Short.class);
+			var temp = Hibernate.getInstance().sql("SELECT * FROM Short s WHERE s.ownerId = '" + followed.getFollowed() + "'" , Short.class);
 			if(!temp.isEmpty())
 				followedShortsList.addAll(temp);
 		}
 		
 		// SORT
 		followedShortsList.sort((o1, o2) -> {
-			return (int) (o1.getTimestamp() - o2.getTimestamp());
+			return (int) (o2.getTimestamp() - o1.getTimestamp());
 		});
 		
 		List<String> resultList = new ArrayList<>();
