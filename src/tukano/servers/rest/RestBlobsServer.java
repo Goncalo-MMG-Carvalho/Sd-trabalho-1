@@ -27,13 +27,19 @@ public class RestBlobsServer {
 			ResourceConfig config = new ResourceConfig();
 			config.register( RestBlobsResource.class );
 
+			String blobArg = "";
+			if (args.length > 1) {
+				blobArg = args[1];
+			}
+
 			String ip = InetAddress.getLocalHost().getHostAddress();
-			String serverURI = String.format(SERVER_URI_FMT, ip, PORT);
+			
+			String serverURI = String.format(SERVER_URI_FMT, ip+blobArg, PORT);  //check if this is right
 			JdkHttpServerFactory.createHttpServer(URI.create(serverURI), config);
+			Log.info(ip+blobArg);
+			Log.info(String.format("%s Server ready @ %s\n", SERVICE, serverURI));
 
-			Log.info(String.format("%s Server ready @ %s\n", SERVICE/*+args[0]*/, serverURI));
-
-			Discovery.getInstance().announce(SERVICE/*+args[0]*/, serverURI);
+			Discovery.getInstance().announce(SERVICE, serverURI);
 		} 
 		catch (Exception e) {
 			Log.severe(e.getMessage());
