@@ -384,15 +384,34 @@ public class JavaShorts implements Shorts {
 			Log.info("another empty list");
 		//DEBUG
 		*/
+		
+		
 		//Ja percebi o teste 4b do prof é mesmo rato quando não há users a seguir poem os shorts do mesmo
 		
-		var followList = Hibernate.getInstance().sql( "SELECT s.shortId"
+		// VERSÃO SEBAS
+		/*
+		var followList = Hibernate.getInstance()
+				.sql( "SELECT s.shortId"
 					+ "FROM (SELECT * FROM Short INNER JOIN Follow ON Short.ownerId = Follow.followed) s "
 					+ "WHERE s.follower = '" + userId + "' "
 					+ "ORDER BY s.timestamp ASC", String.class);
-		var followList2 = Hibernate.getInstance().sql("SELECT s.shortId FROM Short s WHERE s.ownerId = '" + userId + "'", String.class);
+		var followList2 = Hibernate.getInstance()
+				.sql("SELECT s.shortId "
+				+ "FROM Short s "
+				+ "WHERE s.ownerId = '" + userId + "'", String.class);
+		
 		followList.addAll(followList2);
 		followList.forEach(f -> Log.info("short: " + f));
+		*/
+		// VERSÃO GONCAS
+		
+		var followList = Hibernate.getInstance()
+				.sql( "SELECT s.shortId"
+					+ "FROM (SELECT Short.shortId, Short.timestamp"
+						+ "FROM Short INNER JOIN Follow ON Short.ownerId = Follow.followed "
+						+ "WHERE Follow.follower = '" + userId + "' OR Short.ownerId = '" + userId + "'"
+						+ "ORDER BY Short.timestamp ASC) s", String.class);
+		
 
 		Log.info("Success getfeed.");
 		return Result.ok(followList);
