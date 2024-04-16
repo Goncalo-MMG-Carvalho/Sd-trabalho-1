@@ -1,6 +1,7 @@
 package tukano.servers.java;
 
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -14,6 +15,7 @@ import tukano.api.java.Result;
 import tukano.api.java.Shorts;
 import tukano.api.java.Users;
 import tukano.clients.UserClientFactory;
+import tukano.discovery.Discovery;
 import tukano.api.java.Result.ErrorCode;
 
 public class JavaShorts implements Shorts {
@@ -464,6 +466,7 @@ public class JavaShorts implements Shorts {
 	}
 	
 	public static String generateBlobUrl(String blobId) {
-		return "blobs/"+ blobId;
+		URI[] blobsServices = Discovery.getInstance().knownUrisOf("blobs", 1); //talvez mudar as minEntries depois
+		return blobsServices[0].toString() + "/" + blobId;
 	}
 }
