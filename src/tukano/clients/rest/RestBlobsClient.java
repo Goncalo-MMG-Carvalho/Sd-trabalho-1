@@ -23,12 +23,14 @@ public class RestBlobsClient extends RestClient implements Blobs {
     private Result<Void> priv_upload(String blobId, byte[] bytes) {
     	return super.toJavaResult(
     			target.path(blobId).request()
-    				.post(Entity.entity(bytes, MediaType.APPLICATION_JSON)) , Void.class );
+    				.post(Entity.entity(bytes, MediaType.APPLICATION_OCTET_STREAM)) , Void.class );
     }
     
     public Result<byte[]> priv_download(String blobId) {
     	return super.toJavaResult(
-    			target.path(blobId).request()
+    			target.path(blobId)
+    				.request()
+    				.accept(MediaType.APPLICATION_OCTET_STREAM) 
     				.get() , byte[].class );
     }
     
