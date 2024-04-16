@@ -7,14 +7,15 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import tukano.api.User;
-import tukano.api.Blob;
 import tukano.persistence.Hibernate;
 import tukano.api.Follow;
 import tukano.api.Likes;
 import tukano.api.Short;
+import tukano.api.java.Blobs;
 import tukano.api.java.Result;
 import tukano.api.java.Shorts;
 import tukano.api.java.Users;
+import tukano.clients.BlobClientFactory;
 import tukano.clients.UserClientFactory;
 import tukano.discovery.Discovery;
 import tukano.api.java.Result.ErrorCode;
@@ -110,20 +111,23 @@ public class JavaShorts implements Shorts {
 		// TODO delete the blob when i delete the short?
 					// call BlobsClientFactory to delete the blobs
 
-		
+		/*
 // TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
 		
 		// MANEIRA À JAVARDÂO, TODO MUDAR SE O RESULTADO ESTIVER CERTO
 		var blobList = Hibernate.getInstance().sql("SELECT * FROM Blob b WHERE b.blobId LIKE '%" + shortId + "%'", Blob.class);
 		
-		
-		
-// TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO		
-		
-		
 		// delete blobs
 		if(!blobList.isEmpty())
 			Hibernate.getInstance().delete(blobList);
+		
+		
+// TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO		
+		*/
+		
+		Blobs bclient = BlobClientFactory.getBlobsClient();
+		bclient.deleteShortBlobs(shortId);
+		
 		
 		// delete likes
 		if(!likesList.isEmpty())

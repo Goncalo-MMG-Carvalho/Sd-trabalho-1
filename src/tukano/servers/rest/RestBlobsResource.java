@@ -21,5 +21,10 @@ public class RestBlobsResource extends BigBoyRest implements RestBlobs {
 	public byte[] download(String blobId) {
 		return super.fromJavaResult(impl.download(blobId));
 	}
+
+	@Override
+	public void deleteShortBlobs(String shortId) {
+		super.fromJavaResult(impl.deleteShortBlobs(shortId));
+	}
     
 }

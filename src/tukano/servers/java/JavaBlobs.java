@@ -69,7 +69,6 @@ public class JavaBlobs implements Blobs {
 
 	@Override
 	public Result<byte[]> download(String blobId) {
-		// TODO Auto-generated method stub
 		Log.info("Wants to download blobId: " + blobId);
 		
 		var blobList = Hibernate.getInstance().sql("SELECT * FROM Blob b WHERE b.blobId = '" + blobId + "'", Blob.class);
@@ -87,6 +86,8 @@ public class JavaBlobs implements Blobs {
 		return Result.ok(getBytesFromFile("/blobFiles/" + blobId));
 	}
 	
+	
+	
 	private byte[] getBytesFromFile(String filePath) {
 		byte[] fileContent = null;
 		Path path = Paths.get(filePath);
@@ -101,6 +102,24 @@ public class JavaBlobs implements Blobs {
 		
 		
 		return fileContent;
+	}
+
+	@Override
+	public Result<Void> deleteShortBlobs(String shortId) {
+		
+		Log.info("\n\n\n\n\n\n\nEntrou no deleteshortsblobs ... \n\n\n");
+		
+		var blobList = Hibernate.getInstance().sql("SELECT * FROM Blob b WHERE b.blobId LIKE '%" + shortId + "%'", Blob.class);
+		
+		if(!blobList.isEmpty()) {	
+			for (Blob b : blobList) {
+				Log.info("Deleting blob: " + b.getBlobId());
+			}
+			
+			Hibernate.getInstance().delete(blobList);
+		}
+		
+		return Result.ok();
 	}
 	
 }

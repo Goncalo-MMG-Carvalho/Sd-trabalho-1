@@ -51,4 +51,12 @@ public interface Blobs {
 		sink.accept(res.value());
 		return Result.ok();
 	}
+	
+	
+	/**
+	 * Deletes all the blobs of the short
+	 * @param shortId Id of the sort to delete
+	 * @return empty
+	 */
+	public Result<Void> deleteShortBlobs(String shortId);
 }

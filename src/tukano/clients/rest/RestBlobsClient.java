@@ -50,4 +50,17 @@ public class RestBlobsClient extends RestClient implements Blobs {
     	//throw new UnsupportedOperationException("Unimplemented method 'download'");
     }
 
+
+	@Override
+	public Result<Void> deleteShortBlobs(String shortId) {
+		return super.reTry( () -> priv_deleteShortBlobs(shortId));
+	}
+
+
+	private Result<Void> priv_deleteShortBlobs(String shortId) {
+		return super.toJavaResult(
+    			target.path(shortId).request()
+    				.delete(), Void.class );
+	}
+
 }
