@@ -28,6 +28,8 @@ public class BlobClientFactory {
 	public static Blobs getBlobsClient() {
 		Discovery discovery = Discovery.getInstance();
 		URI[] domainserviceURI = discovery.knownUrisOf(SERVICE, 1);
-		return BlobClientFactory.get(domainserviceURI[0].toString());
+		
+		int rand = (int)((Math.random()-0.001) * (domainserviceURI.length));
+		return BlobClientFactory.get(domainserviceURI[rand].toString());
 	}
 }

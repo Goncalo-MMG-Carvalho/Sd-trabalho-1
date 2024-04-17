@@ -141,7 +141,7 @@ public class JavaUsers implements Users {
 		if (newUser.displayName() != null)
 			user.setDisplayName(newUser.displayName());
 		
-		if (newUser.userId() != null) {
+		if (newUser.userId() != null && !newUser.getUserId().equals(userId)) {
 			//Log.info("User id can't be changed");
 			return Result.error( ErrorCode.BAD_REQUEST);
 		}
