@@ -39,7 +39,7 @@ public class JavaBlobs implements Blobs {
 		var blobList = Hibernate.getInstance().sql("SELECT * FROM Blob b WHERE b.blobId = '" + blobId + "'", Blob.class);
 		
 		if(!blobList.isEmpty()) {
-			byte[] currBytes = getBytesFromFile("/blobFiles/" + blobId);
+			byte[] currBytes = getBytesFromFile(blobId);
 			if(!Arrays.equals(currBytes, bytes)) {
 				Log.info("New bytes are different from bytes.");
 				return Result.error( ErrorCode.CONFLICT);
@@ -50,13 +50,13 @@ public class JavaBlobs implements Blobs {
 		
 		// create file and write to file
 		try {
-			Path outputPath = Paths.get("/blobFiles/" + blobId);
+			Path outputPath = Paths.get("", blobId);
 		
 			Files.createFile(outputPath);
 		    Files.write(outputPath, bytes); // Write the byte array to the file
 		} 
 		catch (IOException e) {
-//			Log.info("\n Error writing to file. \n");
+			Log.info("\n\n Error writing to file. \n\n");
 		    //e.printStackTrace();
 		}
 		
@@ -91,20 +91,20 @@ public class JavaBlobs implements Blobs {
 			
 		}*/
 		
-		return Result.ok(getBytesFromFile("/blobFiles/" + blobId));
+		return Result.ok(getBytesFromFile(blobId));
 	}
 	
 	
 	
-	private byte[] getBytesFromFile(String filePath) {
+	private byte[] getBytesFromFile(String blobId) {
 		byte[] fileContent = null;
-		Path path = Paths.get(filePath);
 		
 		try {
+			Path path = Paths.get("", blobId);
 			fileContent = Files.readAllBytes(path);
 		}
 		catch (IOException e) {
-//			Log.info("\n Error reading file. \n");
+			Log.info("\n\n Error reading file. \n\n");
 			//e.printStackTrace();
 		}
 		
