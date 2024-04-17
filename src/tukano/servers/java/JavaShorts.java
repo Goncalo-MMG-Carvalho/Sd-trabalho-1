@@ -486,6 +486,9 @@ public class JavaShorts implements Shorts {
 		
 		if(!userLikesList.isEmpty()) {
 			for (Likes l : userLikesList) {
+				var s = Hibernate.getInstance().sql("SELECT * FROM Short s WHERE s.shortId = '"  + l.getShortId() + "'", Short.class).get(0);
+				s.decLikes();
+				Hibernate.getInstance().update(s);
 				Hibernate.getInstance().delete(l);
 			}
 		}
