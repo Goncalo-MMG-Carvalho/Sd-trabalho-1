@@ -470,8 +470,6 @@ public class JavaShorts implements Shorts {
 	}
 	
 	public Result<String> verifyBlobURI(String blobId) {
-		//String url = generateBlobUrl(blobId);
-		
 		var blobUriList = Hibernate.getInstance().sql("SELECT s.blobUrl FROM Short s WHERE s.blobUrl LIKE '%" + blobId + "%'", String.class);
 		
 		if(blobUriList.isEmpty()) {
@@ -479,6 +477,20 @@ public class JavaShorts implements Shorts {
 		}
 		
 		return Result.ok(blobUriList.get(0));
+	}
+	
+	@Override
+	public Result<Void> deleteUserLikes(String userId) {
+		
+		var userLikesList = Hibernate.getInstance().sql("SELECT * FROM Likes l Where l.user = '" + userId + "'", Likes.class);
+		
+		if(!userLikesList.isEmpty()) {
+			for (Likes l : userLikesList) {
+				Hibernate.getInstance().delete(l);
+			}
+		}
+		
+		return Result.ok();
 	}
 	
 	
@@ -502,6 +514,9 @@ public class JavaShorts implements Shorts {
 	
 	public static String generateBlobUrl(String blobId) {
 		URI[] blobsServices = Discovery.getInstance().knownUrisOf("blobs", 1); //talvez mudar as minEntries depois
+		
 		return blobsServices[0].toString() + "/" + blobId;
 	}
+
+	
 }

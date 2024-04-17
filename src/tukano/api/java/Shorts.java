@@ -128,4 +128,6 @@ public interface Shorts {
 	
 	
 	Result<String> verifyBlobURI(String blobId);
+	
+	Result<Void> deleteUserLikes(String userId);
 }

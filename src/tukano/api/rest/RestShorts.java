@@ -29,6 +29,7 @@ public interface RestShorts {
 	String SHORTS = "/shorts";
 	String FOLLOWERS = "/followers";
 	String VERIFY = "/verify";
+	String DELETEUSERLIKES = "/deleteUserLikes";
 	
 	@POST
 	@Path("/{" + USER_ID + "}")
@@ -79,4 +80,10 @@ public interface RestShorts {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	String verifyBlobURI(String blobId);
+	
+	@DELETE
+	@Path("/{" + USER_ID + "}" + DELETEUSERLIKES )
+	void deleteUserLikes(@PathParam(USER_ID)String userId);
+	
+	
 }

@@ -186,13 +186,15 @@ public class JavaUsers implements Users {
 		
 		if(res.isOK()) { //delete user shorts, if he has any
 			var shortsList = res.value();
-			
 			for (String shortId : shortsList) {
 				
 				Log.info("Deleting short: " + shortId);
 				sclient.deleteShort(shortId, pwd);
 			}
 		}
+		
+		//Deletes all the likes this user has made
+		sclient.deleteUserLikes(userId);
 		
 		Hibernate.getInstance().delete(user); 
 		

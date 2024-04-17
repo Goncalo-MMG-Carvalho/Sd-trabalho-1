@@ -182,4 +182,17 @@ public class RestShortsClient extends RestClient implements Shorts {
 	public Result<String> verifyBlobURI(String blobId) {
 		return super.reTry( () -> priv_verifyBlobURI(blobId));
 	}
+
+	public Result<Void> priv_deleteUserLikes(String userId) {
+		return super.toJavaResult( 
+        		target	.path(userId + RestShorts.DELETEUSERLIKES)
+        				.request()
+        				.delete() , Void.class );
+	}
+
+	@Override
+	public Result<Void> deleteUserLikes(String userId) {
+		// TODO Auto-generated method stub
+		return super.reTry( () -> priv_deleteUserLikes(userId));
+	}
 }
