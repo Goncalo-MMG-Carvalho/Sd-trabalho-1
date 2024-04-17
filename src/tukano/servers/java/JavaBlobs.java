@@ -77,6 +77,11 @@ public class JavaBlobs implements Blobs {
 			return Result.error(ErrorCode.NOT_FOUND);
 		}
 		
+		for (Blob blob : blobList) {
+			Log.info("Blob found: " + blob.getBlobId());
+		}
+		Log.info("");
+		
 		/*
 		Shorts sclient = ShortClientFactory.getShortsClient();
 		Result<String> res = sclient.verifyBlobURI(blobId);
@@ -107,18 +112,17 @@ public class JavaBlobs implements Blobs {
 	@Override
 	public Result<Void> deleteShortBlobs(String shortId) {
 		
-		Log.info("\n\n\n\n\n\n\nEntrou no deleteshortsblobs ... \n\n\n");
+		Log.info("\n\n\n\n\n\n\n Entrou no deleteshortsblobs ... \n\n\n");
 		
 		var blobList = Hibernate.getInstance().sql("SELECT * FROM Blob b WHERE b.blobId = 'blob."+ shortId + "'", Blob.class);
 		
 		if(!blobList.isEmpty()) {	
 			for (Blob b : blobList) {
-				Log.info("Deleting blob: " + b.getBlobId() + "\n\n\n");
-				
-				//Hibernate.getInstance().delete(b);
+				Log.info("Deleting blob: " + b.getBlobId());
+				Hibernate.getInstance().delete(b);
 			}
 			
-			Hibernate.getInstance().delete(blobList);
+			
 		}
 		
 		blobList = Hibernate.getInstance().sql("SELECT * FROM Blob b WHERE b.blobId = 'blob."+ shortId + "'", Blob.class);
