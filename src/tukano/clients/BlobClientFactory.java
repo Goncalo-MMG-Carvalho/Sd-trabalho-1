@@ -28,7 +28,11 @@ public class BlobClientFactory {
 	public static Blobs getBlobsClient() {
 		Discovery discovery = Discovery.getInstance();
 		URI[] domainserviceURI = discovery.knownUrisOf(SERVICE, 1);
+		int numberOfServices = domainserviceURI.length;
 		
-		return BlobClientFactory.get(domainserviceURI[0].toString());
+		/*if (numberOfServices == 0)
+			throw new RuntimeException("No service found for " + SERVICE);*/
+		int rand = (int)(Math.random() * (numberOfServices - 1));
+		return BlobClientFactory.get(domainserviceURI[rand].toString());
 	}
 }
