@@ -517,8 +517,9 @@ public class JavaShorts implements Shorts {
 	
 	public static String generateBlobUrl(String blobId) {
 		URI[] blobsServices = Discovery.getInstance().knownUrisOf("blobs", 1); //talvez mudar as minEntries depois
-		
-		return blobsServices[0].toString() + "/" + blobId;
+		int numberOfServices = blobsServices.length;
+		int rand = (int)(Math.random() * (numberOfServices - 1));
+		return blobsServices[rand].toString() + "/" + blobId;
 	}
 
 	
