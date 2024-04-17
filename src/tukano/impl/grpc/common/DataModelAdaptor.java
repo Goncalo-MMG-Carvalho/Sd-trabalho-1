@@ -17,5 +17,4 @@ public class DataModelAdaptor {
 				.setDisplayName( from.getDisplayName())
 				.build();
 	}
-
 }
