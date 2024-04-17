@@ -49,13 +49,14 @@ public class JavaBlobs implements Blobs {
 		}
 		
 		// create file and write to file
-		Path outputPath = Paths.get("/blobFiles/" + blobId);
 		try {
+			Path outputPath = Paths.get("/blobFiles/" + blobId);
+		
 			Files.createFile(outputPath);
 		    Files.write(outputPath, bytes); // Write the byte array to the file
 		} 
 		catch (IOException e) {
-			Log.info("\n Error writing to file. \n");
+//			Log.info("\n Error writing to file. \n");
 		    //e.printStackTrace();
 		}
 		
@@ -77,16 +78,18 @@ public class JavaBlobs implements Blobs {
 			return Result.error(ErrorCode.NOT_FOUND);
 		}
 		
-		for (Blob blob : blobList) {
-			Log.info("Blob found: " + blob.getBlobId());
-		}
-		Log.info("");
+//		for (Blob blob : blobList) {
+//			Log.info("Blob found: " + blob.getBlobId());
+//		}
+//		Log.info("");
 		
 		/*
 		Shorts sclient = ShortClientFactory.getShortsClient();
 		Result<String> res = sclient.verifyBlobURI(blobId);
 		String blobUrl = res.value();
-		*/
+		if(blobUrl == null ) {
+			
+		}*/
 		
 		return Result.ok(getBytesFromFile("/blobFiles/" + blobId));
 	}
@@ -101,7 +104,7 @@ public class JavaBlobs implements Blobs {
 			fileContent = Files.readAllBytes(path);
 		}
 		catch (IOException e) {
-			Log.info("\n Error reading file. \n");
+//			Log.info("\n Error reading file. \n");
 			//e.printStackTrace();
 		}
 		
@@ -112,10 +115,10 @@ public class JavaBlobs implements Blobs {
 	@Override
 	public Result<Void> deleteShortBlobs(String shortId) {
 		
-		Log.info("\n\n\n\n\n\n\n Entrou no deleteshortsblobs ... \n\n\n");
+		Log.info("Entrou no deleteshortsblobs ...");
 		
 		var blobList = Hibernate.getInstance().sql("SELECT * FROM Blob b WHERE b.blobId = 'blob."+ shortId + "'", Blob.class);
-		
+		Log.info("FOUND BLOB? " + shortId + ", "+ blobList.isEmpty());
 		if(!blobList.isEmpty()) {	
 			for (Blob b : blobList) {
 				Log.info("Deleting blob: " + b.getBlobId());
@@ -126,7 +129,7 @@ public class JavaBlobs implements Blobs {
 		}
 		
 		blobList = Hibernate.getInstance().sql("SELECT * FROM Blob b WHERE b.blobId = 'blob."+ shortId + "'", Blob.class);
-		Log.info("\n\n DID DELETE BLOB? "+ blobList.isEmpty());
+		Log.info("DID DELETE BLOB? " + shortId + ", "+ blobList.isEmpty());
 		
 		
 		return Result.ok();

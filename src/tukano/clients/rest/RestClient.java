@@ -27,10 +27,10 @@ import org.glassfish.jersey.client.ClientProperties;
 public class RestClient {
 	private static Logger Log = Logger.getLogger(RestClient.class.getName());
 
-	protected static final int READ_TIMEOUT = 5555;
-	protected static final int CONNECT_TIMEOUT = 5555;
+	protected static final int READ_TIMEOUT = 2000;
+	protected static final int CONNECT_TIMEOUT = 2000;
 
-	protected static final int MAX_RETRIES = 10;
+	protected static final int MAX_RETRIES = 7; // CR7 SIIIIIII
 	protected static final int RETRY_SLEEP = 2000;
 
 	final URI serverURI;
@@ -53,7 +53,7 @@ public class RestClient {
     			return func.get();
     		} 
     		catch (ProcessingException x) {
-    			Log.info("Going to sleep for" + RETRY_SLEEP + "ms ...");
+    			Log.info("Going to sleep for" + RETRY_SLEEP/1000 + "s ...");
     			mySleep(RETRY_SLEEP);
     			Log.info("Now retrying.");
     			

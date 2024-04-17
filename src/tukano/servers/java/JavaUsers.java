@@ -164,20 +164,12 @@ public class JavaUsers implements Users {
 			return Result.error( ErrorCode.BAD_REQUEST);
 		}
 		
-		/*//User user = users.get(userId);			
-		// Check if user exists 
-		if( user == null ) {
-			Log.info("User does not exist.");
-			return Result.error( ErrorCode.NOT_FOUND);
-		}*/
-
 		var resultUsers = Hibernate.getInstance().sql("SELECT * FROM User user WHERE user.userId = '" + userId + "'", User.class);
 
 		if(resultUsers.isEmpty()) {
 			//Log.info("User does not exist.");
 			return Result.error( ErrorCode.NOT_FOUND);
 		}
-		
 		
 		//var passList = Hibernate.getInstance().sql("SELECT user.pwd FROM User user WHERE user.userId = '" + userId + "'", String.class);
 		User user = resultUsers.get(0);
@@ -186,12 +178,6 @@ public class JavaUsers implements Users {
 			//Log.info("Password is incorrect.");
 			return Result.error( ErrorCode.FORBIDDEN);
 		}
-
-		/*//Check if the password is correct
-		if( !user.pwd().equals( pwd)) {
-			Log.info("Password is incorrect.");
-			return Result.error( ErrorCode.FORBIDDEN);
-		}*/
 		
 		//TODO SUPOSTAMENTE TEREMOS QUE FAZER UM DELETE NOS FOLLOWS
 		
@@ -202,15 +188,14 @@ public class JavaUsers implements Users {
 			var shortsList = res.value();
 			
 			for (String shortId : shortsList) {
+				
+				Log.info("Deleting short: " + shortId);
 				sclient.deleteShort(shortId, pwd);
 			}
 		}
 		
 		Hibernate.getInstance().delete(user); 
-		//users.remove(userId);
 		
-		
-		//return Result.error( ErrorCode.NOT_IMPLEMENTED);
 		return Result.ok(user);
 	}
 

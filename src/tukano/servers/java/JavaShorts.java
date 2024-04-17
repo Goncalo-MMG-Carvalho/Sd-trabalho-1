@@ -104,25 +104,37 @@ public class JavaShorts implements Shorts {
 			return Result.error(res.error());
 		}
 		
-		// get likes to this short
-		var likesList = Hibernate.getInstance().sql("SELECT * FROM Likes l WHERE l.shortId = '" + shortId + "'" , Likes.class);
+		
 		
 		
 		// TODO delete the blob when i delete the short?
 					// call BlobsClientFactory to delete the blobs
-
+		
+//		Log.info("Before deleting blobs.");
+		
+		
 		Blobs bclient = BlobClientFactory.getBlobsClient();
 		bclient.deleteShortBlobs(shortId);
 		
 		
+		
+		// get likes to this short
+		var likesList = Hibernate.getInstance().sql("SELECT * FROM Likes l WHERE l.shortId = '" + shortId + "'" , Likes.class);
+		
+//		Log.info("Before deleting Likes, After deleting Blobs. likeListsize: " + likesList.size());
 		// delete likes
 		if(!likesList.isEmpty())
-			Hibernate.getInstance().delete(likesList);
+			for (Likes l : likesList) {
+				Hibernate.getInstance().delete(l);
+			}
+			//Hibernate.getInstance().delete(likesList);
 		// delete short
+		
+//		Log.info("Before deleting short, After deleting likes.");
 		Hibernate.getInstance().delete(sh);
 		
 		
-		Log.info("Success in deleting short.");
+		Log.info("Success in deleting short: " + shortId);
 		return Result.ok();
 	}
 
@@ -258,7 +270,7 @@ public class JavaShorts implements Shorts {
 	}
 
 	@Override
-	public Result<Void> like(String shortId, String userId, boolean isLiked, String pwd) {
+	public Result<Void> like(String shortId, String userId, boolean wantToLike, String pwd) {
 		// TODO Verificar error code when user does not exist
 		
 		if(shortId == null || userId == null || pwd == null) {
@@ -267,7 +279,7 @@ public class JavaShorts implements Shorts {
 		}
 		
 		
-//		Log.info("|Like| user: " + userId + " wants to like short: " + shortId + " value: " + isLiked);
+		Log.info("|Like| user: " + userId + ", short: " + shortId + ", wantToLike: " + wantToLike);
 		
 		Users uclient = UserClientFactory.getUsersClient();
 		Result<User> res = uclient.getUser(userId, pwd);
@@ -290,14 +302,14 @@ public class JavaShorts implements Shorts {
 		String newId = generateLikeId(userId, shortId);
 		
 		var likelist = Hibernate.getInstance().sql("SELECT * FROM Likes l WHERE l.id = '" + newId + "'", Likes.class);
-		var isEmpty = likelist.isEmpty();
+		var alreadyLikes = !likelist.isEmpty();
 		
-		if(!isEmpty && isLiked) {
+		if(alreadyLikes && wantToLike) {
 //			Log.info("Like already exists");
 			return Result.error(ErrorCode.CONFLICT);
 		}
 		
-		if(isEmpty && !isLiked) {
+		if(!alreadyLikes && !wantToLike) {
 //			Log.info("Already not liked");
 			return Result.error(ErrorCode.NOT_FOUND);
 		}
@@ -305,27 +317,45 @@ public class JavaShorts implements Shorts {
 		Likes l = new Likes(newId, userId, shortId);
 		//Short newShort;
 		
-		if(isLiked) {
+		if(wantToLike) {
 			Hibernate.getInstance().persist(l);
 			// String shortId, String ownerId, String blobUrl, long timestamp, int totalLikes
 //			newShort = new Short(oldShort.getShortId(), oldShort.getOwnerId(), oldShort.getBlobUrl(),
 //					oldShort.getTimestamp(), oldShort.getTotalLikes() + 1);
 //			Hibernate.getInstance().update(newShort);
 			
+			Log.info("Before increase -> Likes: " + oldShort.getTotalLikes());
 			
 			oldShort.incLikes();
+			
+			Log.info("After increase -> Likes: " + oldShort.getTotalLikes());
+			
 			Hibernate.getInstance().update(oldShort);
+			
+			var list = Hibernate.getInstance().sql("SELECT s.totalLikes FROM Short s WHERE s.shortId = '" + shortId + "'", Integer.class);
+			Log.info("Recorded in the DB -> likes: " + list.get(0));
 			
 		}
 		else {
+			Log.info("Before decrease -> Likes: " + oldShort.getTotalLikes());
+			
 			Hibernate.getInstance().delete(l);
 
 //			newShort = new Short(oldShort.getShortId(), oldShort.getOwnerId(), oldShort.getBlobUrl(),
 //			oldShort.getTimestamp(), oldShort.getTotalLikes() - 1);
 //			Hibernate.getInstance().update(newShort);
 			
+			
+			
 			oldShort.decLikes();
+			
+			Log.info("After  decrease -> Likes: " + oldShort.getTotalLikes());
+			
 			Hibernate.getInstance().update(oldShort);
+			
+			// TODO Delete Debug
+			var list = Hibernate.getInstance().sql("SELECT s.totalLikes FROM Short s WHERE s.shortId = '" + shortId + "'", Integer.class);
+			Log.info("Recorded in the DB -> likes: " + list.get(0));
 		}
 		
 //		Log.info("Success Like/Dislike.");
