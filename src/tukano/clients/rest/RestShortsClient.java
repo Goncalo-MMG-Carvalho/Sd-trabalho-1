@@ -171,7 +171,7 @@ public class RestShortsClient extends RestClient implements Shorts {
     
     
     /* ------------- Apartir de aqui é como Angola, é nosso --------------------*/
-    public Result<String> priv_verifyBlobURI(String blobId) {
+    private Result<String> priv_verifyBlobURI(String blobId) {
     	return super.toJavaResult( 
         		target	.path(RestShorts.VERIFY)
         				.request().accept(MediaType.APPLICATION_JSON)
@@ -183,7 +183,7 @@ public class RestShortsClient extends RestClient implements Shorts {
 		return super.reTry( () -> priv_verifyBlobURI(blobId));
 	}
 
-	public Result<Void> priv_deleteUserLikes(String userId) {
+	private Result<Void> priv_deleteUserLikes(String userId) {
 		return super.toJavaResult( 
         		target	.path(userId + RestShorts.DELETEUSERLIKES)
         				.request()

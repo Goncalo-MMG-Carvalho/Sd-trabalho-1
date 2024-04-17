@@ -26,7 +26,7 @@ public class RestBlobsClient extends RestClient implements Blobs {
     				.post(Entity.entity(bytes, MediaType.APPLICATION_OCTET_STREAM)) , Void.class );
     }
     
-    public Result<byte[]> priv_download(String blobId) {
+    private Result<byte[]> priv_download(String blobId) {
     	return super.toJavaResult(
     			target.path(blobId)
     				.request()

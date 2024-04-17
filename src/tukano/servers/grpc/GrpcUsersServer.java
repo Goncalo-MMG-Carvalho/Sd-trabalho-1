@@ -7,7 +7,7 @@ import io.grpc.ServerBuilder;
 import tukano.api.java.Users;
 
 public class GrpcUsersServer {
-public static final int PORT = 9000;
+public static final int PORT = 13456;
 
 	private static final String GRPC_CTX = "/gprc";
 	private static final String SERVER_BASE_URI = "grpc://%s:%s%s";
