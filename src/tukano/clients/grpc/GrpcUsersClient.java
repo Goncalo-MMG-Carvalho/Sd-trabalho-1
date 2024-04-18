@@ -67,14 +67,7 @@ public class GrpcUsersClient extends GrpcClient implements Users {
 			var res = stub.searchUsers(SearchUserArgs.newBuilder().setPattern(pattern).build());
 			List<User> l = new ArrayList<>();
 			
-//			for(; res.hasNext(); ) {
-//				GrpcUser u = res.next();
-//				l.add(GrpcUser_to_User(u));
-//			}
-			
-			res.forEachRemaining((u) -> {
-				l.add(GrpcUser_to_User(u));
-			});
+			res.forEachRemaining( (u) -> { l.add(GrpcUser_to_User(u)); } );
 			
 			return l;
 		});

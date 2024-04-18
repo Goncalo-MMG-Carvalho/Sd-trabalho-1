@@ -473,7 +473,7 @@ public class JavaShorts implements Shorts {
 		var blobUriList = Hibernate.getInstance().sql("SELECT s.blobUrl FROM Short s WHERE s.blobUrl LIKE '%" + blobId + "%'", String.class);
 		
 		if(blobUriList.isEmpty()) {
-			return Result.ok(null);
+			return Result.ok("");
 		}
 		
 		return Result.ok(blobUriList.get(0));

@@ -30,7 +30,7 @@ public class JavaBlobs implements Blobs {
 		
 		String blobUrl = res.value();
 		
-		if(blobUrl == null) {
+		if(blobUrl.equals("")) { // "" is the sign that the uri is wrong
 			Log.info("BlobId is invalid.");
 			return Result.error(ErrorCode.FORBIDDEN);
 		}

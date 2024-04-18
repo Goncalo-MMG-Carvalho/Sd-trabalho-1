@@ -15,9 +15,9 @@ public class GrpcClient {
 
 //	private static Logger Log = Logger.getLogger(GrpcClient.class.getName());
 
-//	protected static final int READ_TIMEOUT = 2000;
-//	protected static final int CONNECT_TIMEOUT = 2000;
-//
+	protected static final int READ_TIMEOUT = 2000;
+	protected static final int CONNECT_TIMEOUT = 2000;
+
 	
 	protected static final long GRPC_REQUEST_TIMEOUT = 2000;
 	
@@ -25,10 +25,10 @@ public class GrpcClient {
 	protected static final int RETRY_SLEEP = 2000;
 	
 	final URI serverURI;
-//	protected final Client client;
-//	final ClientConfig config;
 	
-	public GrpcClient(URI serverURI) { this.serverURI = serverURI; }
+	public GrpcClient(URI serverURI) { 
+		this.serverURI = serverURI; 
+	}
 
 	protected <T> Result<T> reTry(Supplier<Result<T>> func) {
     	for (int i = 0; i < MAX_RETRIES; i++)
@@ -60,19 +60,6 @@ public class GrpcClient {
 			return Result.error( statusToErrorCode( sre.getStatus() ) );
 		}
     }
-
-	public static ErrorCode getErrorCodeFrom(int status) {
-		return switch (status) {
-			case 200, 209 -> ErrorCode.OK;
-			case 409 -> ErrorCode.CONFLICT;
-			case 403 -> ErrorCode.FORBIDDEN;
-			case 404 -> ErrorCode.NOT_FOUND;
-			case 400 -> ErrorCode.BAD_REQUEST;
-			case 500 -> ErrorCode.INTERNAL_ERROR;
-			case 501 -> ErrorCode.NOT_IMPLEMENTED;
-			default -> ErrorCode.INTERNAL_ERROR;
-		};
-	}
 	
 	static ErrorCode statusToErrorCode( Status status ) {
     	return switch( status.getCode() ) {

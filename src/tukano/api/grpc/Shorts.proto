@@ -23,6 +23,10 @@ service Shorts {
 	rpc likes( LikesArgs ) returns (LikesResult);
 
 	rpc getFeed( GetFeedArgs) returns (GetFeedResult);
+	
+	rpc verifyBlobURI( verifyBlobURIArgs ) returns (verifyBlobURIResult);
+	
+	rpc deleteUserLikes( deleteUserLikesArgs ) returns (deleteUserLikesResult);
 }
 
 message GrpcShort {
@@ -111,4 +115,19 @@ message GetFeedArgs {
 
 message GetFeedResult {
 	repeated string shortId = 1;
+}
+
+message verifyBlobURIArgs {
+	string blobId = 1;
+}
+
+message verifyBlobURIResult {
+	string blobUri = 1;
+}
+
+message deleteUserLikesArgs {
+	string userId = 1;
+}
+
+message deleteUserLikesResult {
 }
