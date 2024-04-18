@@ -14,6 +14,8 @@ public class BlobClientFactory {
 	
 	private static final String REST = "/rest";
 	private static final String GRPC = "/grpc"; 
+	
+	private static int i = 0;
 
 	public static Blobs get(String serverURI) {
 
@@ -30,7 +32,9 @@ public class BlobClientFactory {
 		Discovery discovery = Discovery.getInstance();
 		URI[] domainserviceURI = discovery.knownUrisOf(SERVICE, 1);
 		
-		int rand = (int)((Math.random()-0.001) * (domainserviceURI.length));
-		return get(domainserviceURI[rand].toString());
+//		int rand = (int)((Math.random()-0.001) * (domainserviceURI.length));
+		i = ++i % domainserviceURI.length;
+		
+		return get(domainserviceURI[i].toString());
 	}
 }

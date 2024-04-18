@@ -23,6 +23,9 @@ import tukano.api.java.Result.ErrorCode;
 public class JavaShorts implements Shorts {
 	
 	private static Logger Log = Logger.getLogger(JavaShorts.class.getName());
+	private static int i = 0;
+	
+	
 
 	@Override
 	public Result<Short> createShort(String userId, String pwd) {
@@ -400,9 +403,12 @@ public class JavaShorts implements Shorts {
 	public static String generateBlobUrl(String blobId) {
 		URI[] blobsServices = Discovery.getInstance().knownUrisOf("blobs", 1);
 		
-		int rand = (int)((Math.random() - 0.00000001) * (blobsServices.length)); // -0.001 para evitar out of bounds
+//		int rand = (int)((Math.random() - 0.00000001) * (blobsServices.length)); // -0.001 para evitar out of bounds
 		
-		return blobsServices[rand].toString() + "/" + blobId;
+		i = ++i % blobsServices.length;
+		
+		
+		return blobsServices[i].toString() + "/" + blobId;
 	}
 
 	
