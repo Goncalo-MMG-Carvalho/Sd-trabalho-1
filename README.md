@@ -10,4 +10,4 @@ This repository includes the API and a set of files that should be used in proje
 
 * how ro run the project
   * ```mvn clean compile assembly:single docker:build```
-  * ```./test-sd-tp1.bat -image sd2324-tp1-api-xxxxx-yyyyy```
+  * ```./test-sd-tp1.bat -image sd2324-tp1-api-60840-61605```
