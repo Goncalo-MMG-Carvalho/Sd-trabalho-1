@@ -5,11 +5,13 @@ import java.util.logging.Logger;
 
 import io.grpc.ServerBuilder;
 import tukano.api.java.Shorts;
+import tukano.discovery.Discovery;
 
 public class GrpcShortsServer {
 	public static final int PORT = 14567;
 
 	private static final String GRPC_CTX = "/gprc";
+	public static final String SERVICE = Shorts.NAME;
 	private static final String SERVER_BASE_URI = "grpc://%s:%s%s";
 	
 	private static Logger Log = Logger.getLogger(GrpcShortsServer.class.getName());
@@ -21,6 +23,7 @@ public class GrpcShortsServer {
 		var serverURI = String.format(SERVER_BASE_URI, InetAddress.getLocalHost().getHostAddress(), PORT, GRPC_CTX);
 
 		Log.info(String.format("%s gRPC Server ready @ %s\n", Shorts.NAME, serverURI));
+		Discovery.getInstance().announce(SERVICE, serverURI);
 		server.start().awaitTermination();
 	}
 }
