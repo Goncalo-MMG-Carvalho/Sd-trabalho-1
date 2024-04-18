@@ -86,7 +86,9 @@ public class JavaUsers implements Users {
 	@Override
 	public Result<User> updateUser(String userId, String pwd, User newUser) { // TODO DONE
 		
-		//Log.info("getUser : user = " + userId + "; pwd = " + pwd);
+		Log.info("getUser : user = " + userId + "; pwd = " + pwd);
+		Log.info(String.format("New User: userId = %s, pass = %s, email = %s, displayName = %s",
+				newUser.getUserId(), newUser.getPwd(), newUser.getEmail(), newUser.getDisplayName()));
 		
 		// Check if user is valid
 		if(userId == null || pwd == null) {
@@ -94,14 +96,7 @@ public class JavaUsers implements Users {
 			return Result.error( ErrorCode.BAD_REQUEST);
 		}
 
-		/* FAZ SENTIDO MAS ACHO QUE NAO E O QUE OS PROFS QUEREM NA INTERFACE
-		if(!userId.equals(newUser.userId())) {
-			Log.info("User id can't be changed");
-			return Result.error( ErrorCode.BAD_REQUEST);
-		}
-		*/
-
-		/*
+		/* 
 		User currUser = users.get(userId);			
 		// Check if user exists 
 		if( currUser == null ) {

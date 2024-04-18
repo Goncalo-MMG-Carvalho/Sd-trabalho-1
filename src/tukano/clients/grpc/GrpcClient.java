@@ -4,6 +4,8 @@ import java.net.URI;
 import java.util.function.Supplier;
 //import java.util.logging.Logger;
 
+import org.checkerframework.checker.units.qual.t;
+
 import io.grpc.StatusRuntimeException;
 import io.grpc.Status;
 import io.grpc.Status.Code;
@@ -61,6 +63,20 @@ public class GrpcClient {
 		}
     }
 	
+//	public Result<Void> toJavaResult(Supplier<t> func) {
+//		try {
+//			func.get();
+//			return Result.ok();
+//		} 
+//		catch(StatusRuntimeException sre) {
+//			var code = sre.getStatus().getCode();
+//			if( code == Code.UNAVAILABLE || code == Code.DEADLINE_EXCEEDED )
+//				throw sre;
+//			return Result.error( statusToErrorCode( sre.getStatus() ) );
+//		}
+//	}
+	
+	
 	static ErrorCode statusToErrorCode( Status status ) {
     	return switch( status.getCode() ) {
     		case OK -> ErrorCode.OK;
@@ -86,4 +102,6 @@ public class GrpcClient {
 			e.printStackTrace();
 		}
 	}
+
+	
 }

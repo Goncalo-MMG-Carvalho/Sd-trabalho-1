@@ -24,7 +24,7 @@ public class GrpcUsersClient extends GrpcClient implements Users {
 	final UsersGrpc.UsersBlockingStub stub;
 	
 	
-	protected GrpcUsersClient(URI serverURI) {
+	public GrpcUsersClient(URI serverURI) {
 		super(serverURI);
 		var channel = ManagedChannelBuilder.forAddress(serverURI.getHost(), serverURI.getPort()).usePlaintext().build();
 		stub = UsersGrpc.newBlockingStub( channel ).withDeadlineAfter(GrpcClient.GRPC_REQUEST_TIMEOUT, TimeUnit.MILLISECONDS);

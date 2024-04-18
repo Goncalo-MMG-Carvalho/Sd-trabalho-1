@@ -10,7 +10,11 @@ public class DataModelAdaptor {
 	
 	/* User */
 	public static User GrpcUser_to_User( GrpcUser from )  {
-		return new User(from.getUserId(), from.getPassword(), from.getEmail(), from.getDisplayName());
+		return new User(
+				emptyToNull(from.getUserId()),
+				emptyToNull(from.getPassword()),
+				emptyToNull(from.getEmail()),
+				emptyToNull(from.getDisplayName()));
 	}
 
 	public static GrpcUser User_to_GrpcUser( User from )  {
@@ -24,7 +28,13 @@ public class DataModelAdaptor {
 	
 	/* Short */
 	public static Short GrpcShort_to_Short(GrpcShort from) {
-		return new Short(from.getShortId(), from.getOwnerId(), from.getBlobUrl(), from.getTimestamp(), from.getTotalLikes());
+		return new Short(
+				emptyToNull(from.getShortId()),
+				emptyToNull(from.getOwnerId()),
+				emptyToNull(from.getBlobUrl()),
+				from.getTimestamp(),
+				from.getTotalLikes()
+				);
 	}
 	
 	public static GrpcShort Short_to_GrpcShort(Short from) {
@@ -36,4 +46,9 @@ public class DataModelAdaptor {
 				.setTotalLikes(from.getTotalLikes())
 				.build();
 	}
+	
+	private static String emptyToNull(String s) {
+		return s == null || s.length() == 0 ? null: s; 
+	}
+	
 }

@@ -46,13 +46,13 @@ public class GrpcBlobsServerStub implements BlobsGrpc.AsyncService, BindableServ
 		}
 	}
 	
-	public void deleteShortBlobs(DeleteShortBlobsArgs request, StreamObserver<DeleteShortBlobsResult> responseObserver) {
+	public void deleteShortBlobs(deleteShortBlobsArgs request, StreamObserver<deleteShortBlobsResult> responseObserver) {
 		var res = impl.deleteShortBlobs( request.getShortId() );	
 			
 		if(!res.isOK()) 
 				responseObserver.onError(errorCodeToStatus(res.error()));
 		else {
-				responseObserver.onNext( DeleteShortBlobsResult.newBuilder().build());
+				responseObserver.onNext( deleteShortBlobsResult.newBuilder().build());
 				responseObserver.onCompleted();
 		}
 	}

@@ -8,35 +8,11 @@ import io.grpc.BindableService;
 import io.grpc.ServerServiceDefinition;
 import io.grpc.stub.StreamObserver;
 
-import tukano.api.java.Shorts;
 import tukano.servers.java.JavaShorts;
+import tukano.api.java.Shorts;
 
 import tukano.impl.grpc.generated_java.ShortsGrpc;
 import tukano.impl.grpc.generated_java.ShortsProtoBuf.*;
-//import tukano.impl.grpc.generated_java.ShortsProtoBuf.CreateShortArgs;
-//import tukano.impl.grpc.generated_java.ShortsProtoBuf.CreateShortResult;
-//import tukano.impl.grpc.generated_java.ShortsProtoBuf.DeleteShortArgs;
-//import tukano.impl.grpc.generated_java.ShortsProtoBuf.DeleteShortResult;
-//import tukano.impl.grpc.generated_java.ShortsProtoBuf.GetShortArgs;
-//import tukano.impl.grpc.generated_java.ShortsProtoBuf.GetShortResult;
-//import tukano.impl.grpc.generated_java.ShortsProtoBuf.GetShortsArgs;
-//import tukano.impl.grpc.generated_java.ShortsProtoBuf.GetShortsResult;
-//import tukano.impl.grpc.generated_java.ShortsProtoBuf.FollowArgs;
-//import tukano.impl.grpc.generated_java.ShortsProtoBuf.FollowResult;
-//import tukano.impl.grpc.generated_java.ShortsProtoBuf.FollowersArgs;
-//import tukano.impl.grpc.generated_java.ShortsProtoBuf.FollowersResult;
-//import tukano.impl.grpc.generated_java.ShortsProtoBuf.LikeArgs;
-//import tukano.impl.grpc.generated_java.ShortsProtoBuf.LikeResult;
-//import tukano.impl.grpc.generated_java.ShortsProtoBuf.LikesArgs;
-//import tukano.impl.grpc.generated_java.ShortsProtoBuf.LikesResult;
-//import tukano.impl.grpc.generated_java.ShortsProtoBuf.GetFeedArgs;
-//import tukano.impl.grpc.generated_java.ShortsProtoBuf.GetFeedResult;
-//
-//import tukano.impl.grpc.generated_java.ShortsProtoBuf.VerifyBlobURIArgs;
-//import tukano.impl.grpc.generated_java.ShortsProtoBuf.VerifyBlobURIResult; // DeleteUserLikesResult
-//import tukano.impl.grpc.generated_java.ShortsProtoBuf.DeleteUserLikesArgs;
-//import tukano.impl.grpc.generated_java.ShortsProtoBuf.DeleteUserLikesResult;
-
 
 public class GrpcShortsServerStub implements ShortsGrpc.AsyncService, BindableService {
 
@@ -153,24 +129,24 @@ public class GrpcShortsServerStub implements ShortsGrpc.AsyncService, BindableSe
 		}
 	}
 	
-	public void verifyBlobURI(VerifyBlobURIArgs request, StreamObserver<VerifyBlobURIResult> responseObserver) {
+	public void verifyBlobURI(verifyBlobURIArgs request, StreamObserver<verifyBlobURIResult> responseObserver) {
 		var res = impl.verifyBlobURI(request.getBlobId());
 		
 		if(!res.isOK()) 
 			responseObserver.onError(errorCodeToStatus(res.error()));
 		else {
-			responseObserver.onNext( VerifyBlobURIResult.newBuilder().setBlobUri(res.value()).build() );
+			responseObserver.onNext( verifyBlobURIResult.newBuilder().setBlobUri(res.value()).build() );
 			responseObserver.onCompleted();
 		}
 	}
 	
-	public void deleteUserLikes(DeleteUserLikesArgs request, StreamObserver<DeleteUserLikesResult> responseObserver) {
+	public void deleteUserLikes(deleteUserLikesArgs request, StreamObserver<deleteUserLikesResult> responseObserver) {
 		var res = impl.deleteUserLikes(request.getUserId());
 		
 		if(!res.isOK()) 
 			responseObserver.onError(errorCodeToStatus(res.error()));
 		else {
-			responseObserver.onNext( DeleteUserLikesResult.newBuilder().build() );
+			responseObserver.onNext( deleteUserLikesResult.newBuilder().build() );
 			responseObserver.onCompleted();
 		}
 	}
