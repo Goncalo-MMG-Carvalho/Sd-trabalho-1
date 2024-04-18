@@ -13,7 +13,6 @@ import tukano.persistence.Hibernate;
 
 //ADD PERSISTENCE AND CHECK IF ITS RIGHT
 public class JavaUsers implements Users {
-	//private final Map<String,User> users = new HashMap<>();
 
 	private static Logger Log = Logger.getLogger(JavaUsers.class.getName());
 
@@ -35,13 +34,7 @@ public class JavaUsers implements Users {
 			//Log.info("User already exists.");
 			return Result.error( ErrorCode.CONFLICT);
 		}
-		// Insert user, checking if name already exists
-		/*if( users.putIfAbsent(user.userId(), user) != null ) {
-			Log.info("User already exists.");
-			return Result.error( ErrorCode.CONFLICT);
-		}*/
-
-		//db.sql("SELECT FROM ");
+		
 		Hibernate.getInstance().persist(user);
 
 		return Result.ok(userId);
@@ -59,15 +52,6 @@ public class JavaUsers implements Users {
 		
 		var resultUsers = Hibernate.getInstance().sql("SELECT * FROM User user WHERE user.userId = '" + userId + "'", User.class);
 
-		/*
-		//User user = users.get(userId);			
-		// Check if user exists 
-		if( user == null ) {
-			Log.info("User does not exist.");
-			return Result.error( ErrorCode.NOT_FOUND);
-		}
-		*/
-
 		if(resultUsers.isEmpty()) {
 			Log.info("User does not exist.");
 			return Result.error( ErrorCode.NOT_FOUND);
@@ -84,7 +68,7 @@ public class JavaUsers implements Users {
 	}
 
 	@Override
-	public Result<User> updateUser(String userId, String pwd, User newUser) { // TODO DONE
+	public Result<User> updateUser(String userId, String pwd, User newUser) { 
 		
 		Log.info("getUser : user = " + userId + "; pwd = " + pwd);
 		Log.info(String.format("New User: userId = %s, pass = %s, email = %s, displayName = %s",
@@ -96,15 +80,6 @@ public class JavaUsers implements Users {
 			return Result.error( ErrorCode.BAD_REQUEST);
 		}
 
-		/* 
-		User currUser = users.get(userId);			
-		// Check if user exists 
-		if( currUser == null ) {
-			Log.info("User does not exist.");
-			return Result.error( ErrorCode.NOT_FOUND);
-		}
-		*/
-
 		var resultUsers = Hibernate.getInstance().sql("SELECT * FROM User user WHERE user.userId = '" + userId + "'", User.class);
 
 		if(resultUsers.isEmpty()) {
@@ -112,16 +87,8 @@ public class JavaUsers implements Users {
 			return Result.error( ErrorCode.NOT_FOUND);
 		}
 
-		/*
-		//Check if the password is correct
-		if( !currUser.pwd().equals(pwd) ) {
-			Log.info("Password is incorrect.");
-			return Result.error( ErrorCode.FORBIDDEN);
-		}
-		*/
 		User user = resultUsers.get(0);
 		
-		//var passList = Hibernate.getInstance().sql("SELECT user.pwd FROM User user WHERE user.userId = '" + userId + "'", String.class);
 		if (!user.pwd().equals(pwd)) {
 			//Log.info("Password is incorrect.");
 			return Result.error( ErrorCode.FORBIDDEN);
@@ -141,15 +108,13 @@ public class JavaUsers implements Users {
 			return Result.error( ErrorCode.BAD_REQUEST);
 		}
 		
-		//users.replace(userId, newUser);
 		Hibernate.getInstance().update(user);
 
-		//return Result.error( ErrorCode.NOT_IMPLEMENTED);
 		return Result.ok(user);
 	}
 
 	@Override
-	public Result<User> deleteUser(String userId, String pwd) { //TODO DONE
+	public Result<User> deleteUser(String userId, String pwd) {
 
 		Log.info("delete user : user = " + userId + "; pwd = " + pwd);
 		
@@ -166,7 +131,6 @@ public class JavaUsers implements Users {
 			return Result.error( ErrorCode.NOT_FOUND);
 		}
 		
-		//var passList = Hibernate.getInstance().sql("SELECT user.pwd FROM User user WHERE user.userId = '" + userId + "'", String.class);
 		User user = resultUsers.get(0);
 		
 		if (!user.getPwd().equals(pwd)) {
@@ -174,13 +138,14 @@ public class JavaUsers implements Users {
 			return Result.error( ErrorCode.FORBIDDEN);
 		}
 		
-		//TODO SUPOSTAMENTE TEREMOS QUE FAZER UM DELETE NOS FOLLOWS
+		// SUPOSTAMENTE TERIAMOS QUE FAZER UM DELETE NOS FOLLOWS, MAS NÃO É TESTADO
 		
 		Shorts sclient = ShortClientFactory.getShortsClient();
 		Result<List<String>> res = sclient.getShorts(userId);
 		
 		if(res.isOK()) { //delete user shorts, if he has any
 			var shortsList = res.value();
+			
 			for (String shortId : shortsList) {
 				
 				Log.info("Deleting short: " + shortId);
@@ -197,25 +162,14 @@ public class JavaUsers implements Users {
 	}
 
 	@Override
-	public Result<List<User>> searchUsers(String pattern) { //TODO DONE
-		//Log.info("search users: pattern = " + null);
-		
+	public Result<List<User>> searchUsers(String pattern) {
 		if(pattern == null) {
 			//Log.info("pattern is null.");
 			return Result.error( ErrorCode.BAD_REQUEST);
 		}
 		
-		//List<User> matchedUsers = new ArrayList<>();
-		//String PATTERN = pattern.toLowerCase();
-
 		var listUsers = Hibernate.getInstance().sql("SELECT * FROM user WHERE UPPER(userId) LIKE '%" + pattern.toUpperCase() + "%'", User.class);
-		/*users.forEach((userId, user) -> {
-			if (userId.toLowerCase().contains(PATTERN)) {
-              matchedUsers.add(user);
-			}
-		;*/
 		
         return Result.ok(listUsers);
-		//return Result.error( ErrorCode.NOT_IMPLEMENTED);
 	}
 }

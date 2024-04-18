@@ -21,7 +21,7 @@ public class JavaBlobs implements Blobs {
 	private static Logger Log = Logger.getLogger(JavaBlobs.class.getName());
 		
 	@Override
-	public Result<Void> upload(String blobId, byte[] bytes) { // TODO
+	public Result<Void> upload(String blobId, byte[] bytes) {
 		Log.info("Wants to upload blobId: " + blobId);
 		
 		// verify if bloburl is valid
@@ -57,7 +57,7 @@ public class JavaBlobs implements Blobs {
 		} 
 		catch (IOException e) {
 			Log.info("\n\n Error writing to file. \n\n");
-		    //e.printStackTrace();
+		    e.printStackTrace();
 		}
 		
 		Blob b = new Blob(blobId, blobUrl);
@@ -78,19 +78,6 @@ public class JavaBlobs implements Blobs {
 			return Result.error(ErrorCode.NOT_FOUND);
 		}
 		
-//		for (Blob blob : blobList) {
-//			Log.info("Blob found: " + blob.getBlobId());
-//		}
-//		Log.info("");
-		
-		/*
-		Shorts sclient = ShortClientFactory.getShortsClient();
-		Result<String> res = sclient.verifyBlobURI(blobId);
-		String blobUrl = res.value();
-		if(blobUrl == null ) {
-			
-		}*/
-		
 		return Result.ok(getBytesFromFile(blobId));
 	}
 	
@@ -105,7 +92,7 @@ public class JavaBlobs implements Blobs {
 		}
 		catch (IOException e) {
 			Log.info("\n\n Error reading file. \n\n");
-			//e.printStackTrace();
+			e.printStackTrace();
 		}
 		
 		
@@ -114,7 +101,6 @@ public class JavaBlobs implements Blobs {
 
 	@Override
 	public Result<Void> deleteShortBlobs(String shortId) {
-		
 		Log.info("Entrou no deleteshortsblobs ...");
 		
 		var blobList = Hibernate.getInstance().sql("SELECT * FROM Blob b WHERE b.blobId = 'blob."+ shortId + "'", Blob.class);
@@ -124,13 +110,10 @@ public class JavaBlobs implements Blobs {
 				Log.info("Deleting blob: " + b.getBlobId());
 				Hibernate.getInstance().delete(b);
 			}
-			
-			
 		}
 		
 		blobList = Hibernate.getInstance().sql("SELECT * FROM Blob b WHERE b.blobId = 'blob."+ shortId + "'", Blob.class);
 		Log.info("DID DELETE BLOB? " + shortId + ", "+ blobList.isEmpty());
-		
 		
 		return Result.ok();
 	}

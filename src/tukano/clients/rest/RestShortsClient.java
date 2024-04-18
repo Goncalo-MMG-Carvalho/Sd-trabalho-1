@@ -23,12 +23,12 @@ public class RestShortsClient extends RestClient implements Shorts {
     }
 
 
-    private Result<Short> priv_createShort(String userId, String pwd) { // TODO verificar se null funciona
+    private Result<Short> priv_createShort(String userId, String pwd) {
     	return super.toJavaResult( 
     		target	.path(userId)
     				.queryParam(RestShorts.PWD, pwd)
     				.request().accept(MediaType.APPLICATION_JSON)
-    				.post(null) , Short.class ); //TODO
+    				.post(null) , Short.class );
     }
     
     private Result<Void> priv_deleteShort(String shortId, String pwd) { 

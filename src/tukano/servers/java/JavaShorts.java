@@ -74,10 +74,6 @@ public class JavaShorts implements Shorts {
 		
 		Log.info("deleteShort: " + shortId);
 		
-//		if(shortId == null || pwd == null ) {
-//			Log.info("Input invalid.");
-//			return Result.error( ErrorCode.BAD_REQUEST);
-//		}
 		
 		var shortList = Hibernate.getInstance().sql("SELECT * FROM Short s WHERE s.shortId = '" + shortId + "'", Short.class);
 		
@@ -88,13 +84,6 @@ public class JavaShorts implements Shorts {
 		
 		Short sh = shortList.get(0);
 		
-//		var userList  = Hibernate.getInstance().sql("SELECT * FROM User u WHERE u.userId = " + sh.getOwnerId(), User.class);
-//		User user = userList.get(0);
-//		
-//		if(!user.pwd().equals(pwd)) {
-//			Log.info("Password is incorrect.");
-//			return Result.error( ErrorCode.FORBIDDEN);
-//		}
 		
 		Users uclient = UserClientFactory.getUsersClient();
 		Result<User> res = uclient.getUser(sh.getOwnerId(), pwd);
@@ -103,38 +92,23 @@ public class JavaShorts implements Shorts {
 			Log.info("Error with password");
 			return Result.error(res.error());
 		}
-		
-		
-		
-		
-		// TODO delete the blob when i delete the short?
-					// call BlobsClientFactory to delete the blobs
-		
-//		Log.info("Before deleting blobs.");
-		
-		
+			
 		Blobs bclient = BlobClientFactory.getBlobsClient();
 		bclient.deleteShortBlobs(shortId);
 		
-		
-		
-		// get likes to this short
 		var likesList = Hibernate.getInstance().sql("SELECT * FROM Likes l WHERE l.shortId = '" + shortId + "'" , Likes.class);
 		
-//		Log.info("Before deleting Likes, After deleting Blobs. likeListsize: " + likesList.size());
 		// delete likes
-		if(!likesList.isEmpty())
+		if(!likesList.isEmpty()) {
 			for (Likes l : likesList) {
 				Hibernate.getInstance().delete(l);
 			}
+			
 			//Hibernate.getInstance().delete(likesList);
-		// delete short
+		}
 		
-//		Log.info("Before deleting short, After deleting likes.");
 		Hibernate.getInstance().delete(sh);
 		
-		
-		Log.info("Success in deleting short: " + shortId);
 		return Result.ok();
 	}
 
@@ -222,7 +196,6 @@ public class JavaShorts implements Shorts {
 		var followList = Hibernate.getInstance().sql("SELECT * FROM Follow f WHERE f.id = '" + newId + "'", Follow.class);
 		boolean alreadyFollow = !followList.isEmpty();
 		
-		
 		Follow f = new Follow(newId, userId1, userId2);
 		
 		if(wantToFollow) {
@@ -230,21 +203,13 @@ public class JavaShorts implements Shorts {
 				Hibernate.getInstance().persist(f);
 			}
 			else {
-				// TODO reconsider this
-//				Log.info("ESTE ERRO NAO ESTA NA INTERFACE");
-				return Result.error(ErrorCode.CONFLICT); //comentar isto os testes do prof nao coincidem com o resilt
+				return Result.error(ErrorCode.CONFLICT);
 			}
 		}
 		else {
 			if(alreadyFollow) {
 				Hibernate.getInstance().delete(f);
 			}
-			/*else {
-				// sem este ja funciona
-//				Log.info("ESTE ERRO NAO ESTA NA INTERFACE");
-				return Result.error(ErrorCode.CONFLICT);
-				
-			}*/
 		}
 		
 //		Log.info("Success follow/unfollow");
@@ -271,13 +236,11 @@ public class JavaShorts implements Shorts {
 
 	@Override
 	public Result<Void> like(String shortId, String userId, boolean wantToLike, String pwd) {
-		// TODO Verificar error code when user does not exist
 		
 		if(shortId == null || userId == null || pwd == null) {
 //			Log.info("info: bad input");
 			return Result.error(ErrorCode.BAD_REQUEST);
 		}
-		
 		
 		Log.info("|Like| user: " + userId + ", short: " + shortId + ", wantToLike: " + wantToLike);
 		
@@ -289,7 +252,6 @@ public class JavaShorts implements Shorts {
 			return Result.error(res.error());
 		}
 		
-		
 		Result<Short> res2 = this.getShort(shortId);
 		
 		if(!res2.isOK()) {
@@ -300,7 +262,6 @@ public class JavaShorts implements Shorts {
 		Short oldShort = res2.value();
 		
 		String newId = generateLikeId(userId, shortId);
-		
 		var likelist = Hibernate.getInstance().sql("SELECT * FROM Likes l WHERE l.id = '" + newId + "'", Likes.class);
 		var alreadyLikes = !likelist.isEmpty();
 		
@@ -315,47 +276,16 @@ public class JavaShorts implements Shorts {
 		}
 		
 		Likes l = new Likes(newId, userId, shortId);
-		//Short newShort;
 		
 		if(wantToLike) {
 			Hibernate.getInstance().persist(l);
-			// String shortId, String ownerId, String blobUrl, long timestamp, int totalLikes
-//			newShort = new Short(oldShort.getShortId(), oldShort.getOwnerId(), oldShort.getBlobUrl(),
-//					oldShort.getTimestamp(), oldShort.getTotalLikes() + 1);
-//			Hibernate.getInstance().update(newShort);
-			
-			Log.info("Before increase -> Likes: " + oldShort.getTotalLikes());
-			
 			oldShort.incLikes();
-			
-			Log.info("After increase -> Likes: " + oldShort.getTotalLikes());
-			
 			Hibernate.getInstance().update(oldShort);
-			
-			var list = Hibernate.getInstance().sql("SELECT s.totalLikes FROM Short s WHERE s.shortId = '" + shortId + "'", Integer.class);
-			Log.info("Recorded in the DB -> likes: " + list.get(0));
-			
 		}
 		else {
-			Log.info("Before decrease -> Likes: " + oldShort.getTotalLikes());
-			
 			Hibernate.getInstance().delete(l);
-
-//			newShort = new Short(oldShort.getShortId(), oldShort.getOwnerId(), oldShort.getBlobUrl(),
-//			oldShort.getTimestamp(), oldShort.getTotalLikes() - 1);
-//			Hibernate.getInstance().update(newShort);
-			
-			
-			
 			oldShort.decLikes();
-			
-			Log.info("After  decrease -> Likes: " + oldShort.getTotalLikes());
-			
 			Hibernate.getInstance().update(oldShort);
-			
-			// TODO Delete Debug
-			var list = Hibernate.getInstance().sql("SELECT s.totalLikes FROM Short s WHERE s.shortId = '" + shortId + "'", Integer.class);
-			Log.info("Recorded in the DB -> likes: " + list.get(0));
 		}
 		
 //		Log.info("Success Like/Dislike.");
@@ -363,9 +293,7 @@ public class JavaShorts implements Shorts {
 	}
 
 	@Override
-	public Result<List<String>> likes(String shortId, String pwd) {		
-//		Log.info("Likes ...");
-		
+	public Result<List<String>> likes(String shortId, String pwd) {
 		Result<Short> res = this.getShort(shortId);
 		
 		if(!res.isOK()) {
@@ -400,35 +328,6 @@ public class JavaShorts implements Shorts {
 			return Result.error(res.error());
 		}
 		
-		/*
-		//DEBUG
-		//PRINT ALL THE FOLLOWERS AND FOLLOWED
-		var allFollow = Hibernate.getInstance().sql("SELECT * FROM Follow f", Follow.class);
-		allFollow.forEach(f -> Log.info("follow id: " + f.getId() + 
-		" follow: " + f.getFollowed() + " follower: " + f.getFollower()));
-
-		var followList = Hibernate.getInstance().sql("SELECT f.follower FROM Follow f WHERE f.follower = '"+ userId + "'", String.class);
-		followList.forEach(f -> Log.info("follower: " + f));
-		if (followList.isEmpty())
-			Log.info("no followers");
-		var followedList = Hibernate.getInstance().sql("SELECT f.followed FROM Follow f WHERE f.followed = '"+ userId + "'", String.class);
-		followedList.forEach(f -> Log.info("followed: " + f));
-		if (followedList.isEmpty())
-			Log.info("no one followed");
-
-		//this from the method followers
-		var followersList = Hibernate.getInstance().sql("SELECT f.follower FROM Follow f WHERE f.followed = '" + userId + "'", String.class);
-		followersList.forEach(f -> Log.info("followers: " + f));
-		if (followersList.isEmpty())
-			Log.info("another empty list");
-		//DEBUG
-		*/
-		
-		
-		//Ja percebi o teste 4b do prof é mesmo rato quando não há users a seguir poem os shorts do mesmo
-		
-		// VERSÃO SEBAS
-		
 		var allFollow = Hibernate.getInstance().sql("SELECT * FROM Follow f WHERE f.follower = '" + userId + "'", Follow.class);
 		
 		List<Short> followedShortsList = Hibernate.getInstance().sql(" SELECT * FROM Short s WHERE s.ownerId = '" + userId + "'" , Short.class);
@@ -449,23 +348,6 @@ public class JavaShorts implements Shorts {
 			resultList.add(s.getShortId());
 		}
 		
-		/*
-		followList.addAll(followList2);
-		followList.forEach(f -> Log.info("short: " + f));*/
-		
-		// VERSÃO GONCAS
-		/*
-		var followList = Hibernate.getInstance()
-				.sql( "SELECT s.shortId "
-					+ "FROM (SELECT Short.shortId, Short.timestamp "
-						+ "FROM Short INNER JOIN Follow ON Short.ownerId = Follow.followed "
-						+ "WHERE Follow.follower = '" + userId + "' OR Short.ownerId = '" + userId + "' "
-						+ "ORDER BY Short.timestamp ASC) s", String.class);
-		
-		*/
-		
-		
-//		Log.info("Success getfeed.");
 		return Result.ok(resultList);
 	}
 	
@@ -516,9 +398,9 @@ public class JavaShorts implements Shorts {
 	}
 	
 	public static String generateBlobUrl(String blobId) {
-		URI[] blobsServices = Discovery.getInstance().knownUrisOf("blobs", 1); //talvez mudar as minEntries depois
+		URI[] blobsServices = Discovery.getInstance().knownUrisOf("blobs", 1);
 		
-		int rand = (int)((Math.random()-0.001) * (blobsServices.length)); // -0.001 para evitar out of bounds
+		int rand = (int)((Math.random() - 0.00000001) * (blobsServices.length)); // -0.001 para evitar out of bounds
 		
 		return blobsServices[rand].toString() + "/" + blobId;
 	}
