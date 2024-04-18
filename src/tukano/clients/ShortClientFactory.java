@@ -23,7 +23,7 @@ public class ShortClientFactory {
 		if (serverURI.endsWith(GRPC))
 			return new GrpcShortsClient(URI.create(serverURI));
 		
-		throw new RuntimeException("We only support rest and Grpc." + serverURI);
+		throw new RuntimeException("We only support rest and grpc. uri = " + serverURI);
 	}
 
 	public static Shorts getShortsClient() {

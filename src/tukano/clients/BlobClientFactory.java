@@ -23,7 +23,7 @@ public class BlobClientFactory {
 		if (serverURI.endsWith(GRPC)) 				
 			return new GrpcBlobsClient(URI.create(serverURI));
 		
-		throw new RuntimeException("Unknown service type..." + serverURI);
+		throw new RuntimeException("We only support rest and grpc. uri = " + serverURI);
 	}
 
 	public static Blobs getBlobsClient() {

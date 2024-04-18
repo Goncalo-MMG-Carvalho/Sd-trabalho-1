@@ -10,7 +10,7 @@ import tukano.discovery.Discovery;
 public class GrpcUsersServer {
 public static final int PORT = 13456;
 
-	private static final String GRPC_CTX = "/gprc";
+	private static final String GRPC_CTX = "/grpc";
 	public static final String SERVICE = Users.NAME;
 	private static final String SERVER_BASE_URI = "grpc://%s:%s%s";
 	

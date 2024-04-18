@@ -11,7 +11,7 @@ import tukano.discovery.Discovery;
 public class GrpcBlobsServer {
 	public static final int PORT = 15678;
 
-	private static final String GRPC_CTX = "/gprc";
+	private static final String GRPC_CTX = "/grpc";
 	public static final String SERVICE = Blobs.NAME;
 	private static final String SERVER_BASE_URI = "grpc://%s:%s%s";
 	
