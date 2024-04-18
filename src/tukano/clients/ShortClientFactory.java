@@ -23,13 +23,13 @@ public class ShortClientFactory {
 		if (serverURI.endsWith(GRPC))
 			return new GrpcShortsClient(URI.create(serverURI));
 		
-		throw new RuntimeException("Unknown service type..." + serverURI);
+		throw new RuntimeException("We only support rest and Grpc." + serverURI);
 	}
 
 	public static Shorts getShortsClient() {
 		Discovery discovery = Discovery.getInstance();
 		URI[] domainserviceURI = discovery.knownUrisOf(SERVICE, 1);
 		
-		return ShortClientFactory.get(domainserviceURI[0].toString());
+		return get(domainserviceURI[0].toString());
 	}
 }

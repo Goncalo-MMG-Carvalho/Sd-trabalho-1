@@ -72,13 +72,5 @@ public class GrpcBlobsClient extends GrpcClient implements Blobs{
 	public Result<Void> deleteShortBlobs(String shortId) {
 		return super.reTry(() -> priv_deleteShortBlobs(shortId));
 	}
-
-	
-	
-	
-	
-//	private byte[] increseArray(byte[] bytes) {
-//		return Arrays.copyOf(bytes, bytes.length*2);
-//	}
 	
 }

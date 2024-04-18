@@ -33,8 +33,7 @@ public class DataModelAdaptor {
 				emptyToNull(from.getOwnerId()),
 				emptyToNull(from.getBlobUrl()),
 				from.getTimestamp(),
-				from.getTotalLikes()
-				);
+				from.getTotalLikes());
 	}
 	
 	public static GrpcShort Short_to_GrpcShort(Short from) {

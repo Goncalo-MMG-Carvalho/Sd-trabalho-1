@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 import org.glassfish.jersey.jdkhttp.JdkHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
 
+import tukano.api.java.Users;
 import tukano.discovery.Discovery;
 
 public class RestUsersServer {
@@ -19,7 +20,7 @@ public class RestUsersServer {
 	}
 
 	public static final int PORT = 3456;
-	public static final String SERVICE = "users";
+	public static final String SERVICE = Users.NAME; /* "users" */
 	private static final String SERVER_URI_FMT = "http://%s:%s/rest";
 
 	public static void main(String[] args) {

@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 import org.glassfish.jersey.jdkhttp.JdkHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
 
+import tukano.api.java.Blobs;
 import tukano.discovery.Discovery;
 
 public class RestBlobsServer {
@@ -19,7 +20,8 @@ public class RestBlobsServer {
 	}
 
 	public static final int PORT = 5678;
-	public static final String SERVICE = "blobs";
+	public static final String SERVICE = Blobs.NAME;
+	
 	private static final String SERVER_URI_FMT = "http://%s:%s/rest";
 
 	public static void main(String[] args) {

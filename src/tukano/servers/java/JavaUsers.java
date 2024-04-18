@@ -151,7 +151,7 @@ public class JavaUsers implements Users {
 	@Override
 	public Result<User> deleteUser(String userId, String pwd) { //TODO DONE
 
-		//Log.info("delete user : user = " + userId + "; pwd = " + pwd);
+		Log.info("delete user : user = " + userId + "; pwd = " + pwd);
 		
 		// Check if user is valid
 		if(userId == null || pwd == null) {

@@ -31,6 +31,6 @@ public class BlobClientFactory {
 		URI[] domainserviceURI = discovery.knownUrisOf(SERVICE, 1);
 		
 		int rand = (int)((Math.random()-0.001) * (domainserviceURI.length));
-		return BlobClientFactory.get(domainserviceURI[rand].toString());
+		return get(domainserviceURI[rand].toString());
 	}
 }

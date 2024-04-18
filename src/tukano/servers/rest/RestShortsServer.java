@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 import org.glassfish.jersey.jdkhttp.JdkHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
 
+import tukano.api.java.Shorts;
 import tukano.discovery.Discovery;
 
 public class RestShortsServer {
@@ -19,7 +20,7 @@ public class RestShortsServer {
 	}
 
 	public static final int PORT = 4567;
-	public static final String SERVICE = "shorts";
+	public static final String SERVICE = Shorts.NAME;/*"shorts"*/
 	private static final String SERVER_URI_FMT = "http://%s:%s/rest";
 
 	public static void main(String[] args) {

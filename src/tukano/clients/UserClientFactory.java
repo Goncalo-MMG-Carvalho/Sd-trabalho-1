@@ -30,6 +30,6 @@ public class UserClientFactory {
 		Discovery discovery = Discovery.getInstance();
 		URI[] domainserviceURI = discovery.knownUrisOf(SERVICE, 1);
 		
-		return UserClientFactory.get(domainserviceURI[0].toString());
+		return get(domainserviceURI[0].toString());
 	}
 }

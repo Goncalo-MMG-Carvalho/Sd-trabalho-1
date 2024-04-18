@@ -7,7 +7,6 @@ import java.net.InetSocketAddress;
 import java.net.MulticastSocket;
 import java.net.NetworkInterface;
 import java.net.URI;
-
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -114,17 +113,19 @@ class DiscoveryImpl implements Discovery {
 	public URI[] knownUrisOf(String serviceName, int minEntries) {
 		while(true) {
 			Set<URI> serviceUris = servicesAvailable.get(serviceName);
-			int size = serviceUris.size();
-			if (serviceUris == null ||  size < minEntries)
-			{
+			
+			//Set<URI> serviceUris = servicesAvailable.getOrDefault(serviceName, Collections.emptySet());
+			
+			int size;
+			if (serviceUris == null ||  (size  = serviceUris.size()) < minEntries) {
 				try {
 					Thread.sleep(DISCOVERY_RETRY_TIMEOUT);
-				} catch (Exception e) { //this exception will handle the cases in which the this thread is interrupted
+				}
+				catch (Exception e) { //this exception will handle the cases in which the this thread is interrupted
 					//i dont know what to put here
 				}
 			}
-			else
-			{
+			else {
 				return serviceUris.toArray(new URI[size]);
 			}
 		}
